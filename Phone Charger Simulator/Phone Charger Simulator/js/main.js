@@ -19,7 +19,7 @@ MainMenu.prototype = {
 	preload: function(){
 		//preload assets for the game 
 		game.load.image('backgroundMain', 'assets/img/bg2.png');
-		
+		game.load.image('placeholder', 'assets/img/Demo visual.png');
 	},
 	
 	create: function(){
@@ -160,7 +160,10 @@ Play.prototype = {
 		//where we create the background, platforms, player, baddies, and collectibles
 		game.stage.backgroundColor = "#4bb1b4";
 		game.physics.startSystem(Phaser.Physics.ARCADE);
-		
+		//for now the place holder for the game 
+		var pH = game.add.sprite(game.width/2, game.height/2, 'placeholder');
+		pH.anchor.set(0.5);
+		pH.scale.setTo(0.75, 0.75);
 	},
 	
 	update: function(){
