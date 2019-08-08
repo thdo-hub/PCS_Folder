@@ -19,7 +19,9 @@ MainMenu.prototype = {
 	preload: function(){
 		//preload assets for the game 
 		game.load.image('backgroundMain', 'assets/img/bg2.png');
-		game.load.image('placeholder', 'assets/img/Demo visual.png');
+		game.load.image('charger', 'assets/img/Charger.png');
+		game.load.image('phone', 'assets/img/Phone.png');
+		game.load.image('desk', 'assets/img/Desk.png');
 	},
 	
 	create: function(){
@@ -149,6 +151,9 @@ var Play = function(game){
 	
 };
 
+//variables for the game 
+var phone;
+var charger;
 
 //GamePlay prototype 
 Play.prototype = {
@@ -161,9 +166,19 @@ Play.prototype = {
 		game.stage.backgroundColor = "#4bb1b4";
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		//for now the place holder for the game 
-		var pH = game.add.sprite(game.width/2, game.height/2, 'placeholder');
+		var pH = game.add.sprite(game.width/2, game.height/2, 'desk');
 		pH.anchor.set(0.5);
-		pH.scale.setTo(0.75, 0.75);
+		//pH.scale.setTo(0.75, 0.75);
+		
+		//the charger being added as a var in the game 
+		charger = game.add.sprite(game.width/2, game.height, 'charger');
+		//set rotation point of charger to be at it's center 
+		charger.anchor.set(0.5);
+		//enables drag to be true on the charger so we can drag it with the mouse
+		charger.inputEnabled = true;
+		
+		
+		
 	},
 	
 	update: function(){
