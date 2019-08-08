@@ -19,8 +19,8 @@ MainMenu.prototype = {
 	preload: function(){
 		//preload assets for the game 
 		game.load.image('backgroundMain', 'assets/img/bg2.png');
-		game.load.atlas('charger', 'assets/img/Charger.png', 'assets/img/Charger.json');
-		game.load.image('phone', 'assets/img/Phone.png');
+		game.load.spritesheet('charger', 'assets/img/Charger.png', 98, 156);
+		game.load.image('phone', 'assets/img/Phone_2.0.png');
 		game.load.image('desk', 'assets/img/Desk.png');
 	},
 	
@@ -170,14 +170,14 @@ Play.prototype = {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
 		//for now the place holder for the game 
-		//var desk = game.add.sprite(game.width/2, game.height/2, 'desk');
-		//desk.anchor.set(0.5);
+		var desk = game.add.sprite(game.width/2, game.height/2, 'desk');
+		desk.anchor.set(0.5);
 		//the charger being added as a var in the game 
 		charger = game.add.sprite(game.width/2, game.height - 100, 'charger');
 		//set rotation point of charger to be at it's center 
 		//charger.anchor.set(0.5);
 		//set scale for charger 
-		charger.scale.setTo(0.75, 0.75);
+		//charger.scale.setTo(0.75, 0.75);
 		
 		//enables drag to be true on the charger so we can drag it with the mouse
 		charger.inputEnabled = true;
@@ -186,20 +186,20 @@ Play.prototype = {
 		charger.enableBody = true;
 		game.physics.arcade.enable(charger);
 		//changes the hitbox(width, height, x, y)
-		charger.body.setSize(31, 18, 44, 50);
+		charger.body.setSize(29, 17, 38, 2);
 		
 		//animation for the charger wiggling out of the phone 
-		charger.animations.add('wiggle', Phaser.Animation.generateFrameNames('Charger', 1, 4 ), 10, true);
+		charger.animations.add('wiggle', [0,1,2,3], 15, true);
 		
 		//------------------------------------------------------------------------------------------------------
 		//for phone image 
 		phone = game.add.sprite(game.width/2, game.height/2, 'phone');
 		phone.anchor.set(0.5);
-		phone.scale.setTo(0.75, 0.75);
+		//phone.scale.setTo(0.75, 0.75);
 		phone.enableBody = true;
 		game.physics.arcade.enable(phone);
 		//changes the hitbox(width, height, x, y)
-		phone.body.setSize(48, 10, 344, 758);
+		phone.body.setSize(44, 10, 144, 552);
 
 		
 		scoreText = game.add.text(100, 400, 'bool: false', {fontSize: '32px', fill: '#000' });
@@ -227,6 +227,7 @@ function collisionHandler(){
 	//pause the loop that subtracts one percent every few seconds
 	//game.state.start('GameOver');
 	charger.animations.play('wiggle');
+	//console.log('wiggle');
 }
 
 //Use var GameOver for gameOver state 
