@@ -143,7 +143,9 @@ Instructions.prototype = {
 }
 
 //variables for the game 
-var pluggedIn = false;
+var pluggedIn = false; 
+var phone;
+var charger;
 //use var GamePlay for the Play state
 var Play = function(game){
 	
@@ -151,9 +153,7 @@ var Play = function(game){
 	
 };
 
-//variables for the game 
-var phone;
-var charger;
+
 
 //GamePlay prototype 
 Play.prototype = {
@@ -166,16 +166,27 @@ Play.prototype = {
 		game.stage.backgroundColor = "#4bb1b4";
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		//for now the place holder for the game 
-		var pH = game.add.sprite(game.width/2, game.height/2, 'desk');
-		pH.anchor.set(0.5);
+		var desk = game.add.sprite(game.width/2, game.height/2, 'desk');
+		desk.anchor.set(0.5);
 		//pH.scale.setTo(0.75, 0.75);
 		
 		//the charger being added as a var in the game 
-		charger = game.add.sprite(game.width/2, game.height, 'charger');
+		charger = game.add.sprite(game.width/2, game.height - 100, 'charger');
 		//set rotation point of charger to be at it's center 
 		charger.anchor.set(0.5);
+		//set scale for charger 
+		charger.scale.setTo(0.75, 0.75);
 		//enables drag to be true on the charger so we can drag it with the mouse
 		charger.inputEnabled = true;
+		charger.input.enableDrag(true);
+		
+		
+		//for phone image 
+		phone = game.add.sprite(game.width/2, game.height/2, 'phone');
+		phone.anchor.set(0.5);
+		phone.scale.setTo(0.75, 0.75);
+		
+		
 		
 		
 		
