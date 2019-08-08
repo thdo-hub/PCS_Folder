@@ -19,7 +19,7 @@ MainMenu.prototype = {
 	preload: function(){
 		//preload assets for the game 
 		game.load.image('backgroundMain', 'assets/img/bg2.png');
-		game.load.image('charger', 'assets/img/Charger.png');
+		game.load.atlas('charger', 'assets/img/Charger.png', 'assets/img/Charger.json');
 		game.load.image('phone', 'assets/img/Phone.png');
 		game.load.image('desk', 'assets/img/Desk.png');
 	},
@@ -147,6 +147,7 @@ var pluggedIn = false;
 var phone;
 var charger;
 var scoreText;
+var wiggle;
 var bool = false;
 //use var GamePlay for the Play state
 var Play = function(game){
@@ -186,6 +187,11 @@ Play.prototype = {
 		game.physics.arcade.enable(charger);
 		//changes the hitbox(width, height, x, y)
 		charger.body.setSize(31, 18, 44, 50);
+		
+		//animation for the charger wiggling out of the phone 
+		charger.animations.add('wiggle', Phaser.Animation.generateFrameNames('Charger', 1, 4 ), 10, true);
+		
+		//------------------------------------------------------------------------------------------------------
 		//for phone image 
 		phone = game.add.sprite(game.width/2, game.height/2, 'phone');
 		phone.anchor.set(0.5);
@@ -219,7 +225,8 @@ Play.prototype = {
 //collect and remove function for the stars 
 function collisionHandler(){
 	//pause the loop that subtracts one percent every few seconds
-	game.state.start('GameOver');
+	//game.state.start('GameOver');
+	charger.animations.play('wiggle');
 }
 
 //Use var GameOver for gameOver state 
