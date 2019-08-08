@@ -146,6 +146,8 @@ Instructions.prototype = {
 var pluggedIn = false; 
 var phone;
 var charger;
+var scoreText;
+var bool = false;
 //use var GamePlay for the Play state
 var Play = function(game){
 	
@@ -165,38 +167,60 @@ Play.prototype = {
 		//where we create the background, platforms, player, baddies, and collectibles
 		game.stage.backgroundColor = "#4bb1b4";
 		game.physics.startSystem(Phaser.Physics.ARCADE);
+
 		//for now the place holder for the game 
-		var desk = game.add.sprite(game.width/2, game.height/2, 'desk');
-		desk.anchor.set(0.5);
-		//pH.scale.setTo(0.75, 0.75);
-		
+		//var desk = game.add.sprite(game.width/2, game.height/2, 'desk');
+		//desk.anchor.set(0.5);
 		//the charger being added as a var in the game 
 		charger = game.add.sprite(game.width/2, game.height - 100, 'charger');
 		//set rotation point of charger to be at it's center 
-		charger.anchor.set(0.5);
+		//charger.anchor.set(0.5);
 		//set scale for charger 
 		charger.scale.setTo(0.75, 0.75);
+		
 		//enables drag to be true on the charger so we can drag it with the mouse
 		charger.inputEnabled = true;
 		charger.input.enableDrag(true);
 		
-		
+		charger.enableBody = true;
+		game.physics.arcade.enable(charger);
+		//changes the hitbox
+		charger.body.setSize(0, 0, 25, 25);
 		//for phone image 
 		phone = game.add.sprite(game.width/2, game.height/2, 'phone');
 		phone.anchor.set(0.5);
 		phone.scale.setTo(0.75, 0.75);
+		phone.enableBody = true;
+		game.physics.arcade.enable(phone);
+		//changes the hitbox
+		phone.body.setSize(0, 0, 100, 100);
+
 		
-		
+		scoreText = game.add.text(100, 400, 'bool: false', {fontSize: '32px', fill: '#000' });
 		
 		
 		
 	},
 	
 	update: function(){
+		game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
 		
+		
+		/*if( check = true ){
+			
+			bool = true;
+			scoreText.text = 'bool: ' + bool;
+		}else{
+			bool = false;
+			scoreText.text = 'bool: ' + bool;
+		}*/
 	}
 }
-
+//collect and remove function for the stars 
+function collisionHandler(){
+	//pause the loop that subtracts one percent every few seconds
+	game.state.start('GameOver');
+}
 
 //Use var GameOver for gameOver state 
 var GameOver = function(game){};
