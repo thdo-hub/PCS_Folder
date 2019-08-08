@@ -184,16 +184,16 @@ Play.prototype = {
 		
 		charger.enableBody = true;
 		game.physics.arcade.enable(charger);
-		//changes the hitbox
-		charger.body.setSize(0, 0, 25, 25);
+		//changes the hitbox(width, height, x, y)
+		charger.body.setSize(31, 18, 44, 50);
 		//for phone image 
 		phone = game.add.sprite(game.width/2, game.height/2, 'phone');
 		phone.anchor.set(0.5);
 		phone.scale.setTo(0.75, 0.75);
 		phone.enableBody = true;
 		game.physics.arcade.enable(phone);
-		//changes the hitbox
-		phone.body.setSize(0, 0, 100, 100);
+		//changes the hitbox(width, height, x, y)
+		phone.body.setSize(48, 10, 344, 758);
 
 		
 		scoreText = game.add.text(100, 400, 'bool: false', {fontSize: '32px', fill: '#000' });
