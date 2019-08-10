@@ -52,12 +52,12 @@ MainMenu.prototype = {
 			F: '#FFFFFF'
 		};
 		
-		
+		//Title text 
 		var text = "Phone Charger Simulator";
 		var style = {font: "50px Arial", fill: "#fff", align: "center" };
 		var title = this.game.add.text(this.game.width/2, this.game.height/4, text, style);
 		title.anchor.set(0.5);
-		
+		//other text 
 		this.story_text = "Keep Your Phone Charged While Texting Your Significant Other";
 		
 		//this allows us to change many things like the font or give the text the ability to wrap on its own 
@@ -69,13 +69,9 @@ MainMenu.prototype = {
 			wordWrap: true,
 			wordWrapWidth: 570,
 		};
+		
+		//pasting the text onto the screen 
 		game.add.text(32, 250, this.story_text, text_style);
-		//A little bit of story 
-		/*text = "Keep Your Phone Charged While Texting Your Significant Other";
-		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var begin = this.game.add.text(this.game.width/2, 250, text, style);
-		begin.anchor.set(0.5);
-		*/
 		
 		//How to begin the game 
 		text = "Press SPACEBAR to Play";
@@ -93,6 +89,7 @@ MainMenu.prototype = {
 	}
 }
 
+//this will be used to instruct the player on how to play the game using text 
 var Instructions = function(game){
 	
 };
@@ -143,12 +140,15 @@ Instructions.prototype = {
 }
 
 //variables for the game 
+//booleans
 var pluggedIn = false; 
+var bool = false;
+//objects 
 var phone;
 var charger;
 var scoreText;
 var wiggle;
-var bool = false;
+
 //use var GamePlay for the Play state
 var Play = function(game){
 	
@@ -167,11 +167,15 @@ Play.prototype = {
 	create: function(){
 		//where we create the background, platforms, player, baddies, and collectibles
 		game.stage.backgroundColor = "#4bb1b4";
+		//physics for the game using ARCADE Physics 
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
-		//for now the place holder for the game 
+		//The background desk for the game
+		//The ratation point has been placed in the center 
 		var desk = game.add.sprite(game.width/2, game.height/2, 'desk');
 		desk.anchor.set(0.5);
+		
+		//Charger-----------------------------------------------------------------------------------------------------
 		//the charger being added as a var in the game 
 		charger = game.add.sprite(game.width/2, game.height - 100, 'charger');
 		//set rotation point of charger to be at it's center 
@@ -179,29 +183,34 @@ Play.prototype = {
 		//set scale for charger 
 		//charger.scale.setTo(0.75, 0.75);
 		
-		//enables drag to be true on the charger so we can drag it with the mouse
+		//enables input such as drag to be true on the charger so we can drag it with the mouse
 		charger.inputEnabled = true;
 		charger.input.enableDrag(true);
-		
+		//enable body for the charger to use physics 
 		charger.enableBody = true;
 		game.physics.arcade.enable(charger);
-		//changes the hitbox(width, height, x, y)
+		//changes the hitbox(width, height, x, y) so that only the tip of the charger does anything when hit 
 		charger.body.setSize(29, 17, 38, 2);
 		
 		//animation for the charger wiggling out of the phone 
 		charger.animations.add('wiggle', [0,1,2,3], 15, true);
 		
-		//------------------------------------------------------------------------------------------------------
+		//Phone------------------------------------------------------------------------------------------------------
 		//for phone image 
+		//the rotation point is set to be the center of the phone so that the phone 
+		//can be conpletely in the center of the game screen 
 		phone = game.add.sprite(game.width/2, game.height/2, 'phone');
 		phone.anchor.set(0.5);
 		//phone.scale.setTo(0.75, 0.75);
+		
+		//phone is given a body to interact with the charger's body and given physics as well
 		phone.enableBody = true;
 		game.physics.arcade.enable(phone);
-		//changes the hitbox(width, height, x, y)
-		phone.body.setSize(44, 10, 144, 552);
+		//changes the hitbox(width, height, x, y) so that only a small part of the phone can interact with the charger 
+		//for the charging function of the game 
+		phone.body.setSize(44, 50, 144, 552);
 
-		
+		//this is to help with testing------------------------------------------------------------------------------------------------------------
 		scoreText = game.add.text(100, 400, 'bool: false', {fontSize: '32px', fill: '#000' });
 		
 		
@@ -209,20 +218,48 @@ Play.prototype = {
 	},
 	
 	update: function(){
-		game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
+		//play an animation that show the charger may fall out of the phone 
+		var charging = game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
+		scoreText.text = 'bool: ' + charging;
+		//use if statement to decided when the charger will fall out of the phone
 		
-		
-		/*if( check = true ){
+		//bool is there to make sure that the update function doesn't continuously repeat the same process over and over 
+		//unless bool is false
+		//It will only go through the if statements at the initial first overlap 
+		if(charging == true && pluggedIn == false && bool == false){
+			//change the pluggedIn boolean to true since the charger will be plugged into the phone 
+			pluggedIn = true;
+			//now check again in another if statement to decide how long the charger will 
+			//stay in the phone charging 
+			if(charging == true && pluggedIn == true && bool == false){
+				//find a random integer to use 
+				var rndInteger = game.rnd.integerInRange(5, 10);
+				//the animation is already playing as soon as the charger overlaps with the phone 
+				//this will decide what to do next after the seconds are over 
+				game.time.events.add(Phaser.Timer.SECOND*rndInteger, fallingCharger, this);
+				//this function will only happen after the seconds are over 
+				
+			}
 			
-			bool = true;
-			scoreText.text = 'bool: ' + bool;
-		}else{
+		}
+		//changes bool back to false when the charger falls out so that we can go through the if statements again 
+		if(charging == false){
 			bool = false;
-			scoreText.text = 'bool: ' + bool;
-		}*/
+			//stop the animation 
+			charger.animations.stop();
+		}
 	}
 }
-//collect and remove function for the stars 
+
+
+function fallingCharger(){
+	//move the y position of the charger to make it seem like it fell off 
+	charger.y += 100;
+	//change the booleans to so the if statements won't start when the charger is already in the phone 
+	pluggedIn = false;
+	bool = true;
+}
+//plays the animation  
 function collisionHandler(){
 	//pause the loop that subtracts one percent every few seconds
 	//game.state.start('GameOver');
