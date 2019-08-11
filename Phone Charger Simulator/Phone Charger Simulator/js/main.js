@@ -148,6 +148,9 @@ var phone;
 var charger;
 var scoreText;
 var wiggle;
+var batteryTimer;
+var batteryPercentage;
+var batteryText;
 
 //use var GamePlay for the Play state
 var Play = function(game){
@@ -179,7 +182,7 @@ Play.prototype = {
 		//the charger being added as a var in the game 
 		charger = game.add.sprite(game.width/2, game.height - 100, 'charger');
 		//set rotation point of charger to be at it's center 
-		//charger.anchor.set(0.5);
+		charger.anchor.set(0.5);
 		//set scale for charger 
 		//charger.scale.setTo(0.75, 0.75);
 		
@@ -208,7 +211,23 @@ Play.prototype = {
 		game.physics.arcade.enable(phone);
 		//changes the hitbox(width, height, x, y) so that only a small part of the phone can interact with the charger 
 		//for the charging function of the game 
-		phone.body.setSize(44, 50, 144, 552);
+		phone.body.setSize(44, 50, 144, 512);
+		
+		
+		//battery life Timer-------------------------------------------------------------------------------------------
+		//battery percentage begins at random number
+		batteryPercentage = game.rnd.integerInRange(15, 20);
+		//create a basic custom timer for the batterylife
+		batteryTimer = game.time.create(false);
+		
+		//the loop to subtract one percent every few seconds 
+		batteryTimer.loop(3000, updateCounter, this);
+		//the integer is counting in thousands since it counts in milliseconds (i.e. 2000 is 2 seconds) 
+		//for the custom timer you must remember to start it on your own for it to work
+		batteryTimer.start();
+		
+		//add the battery life in as text 
+		batteryText = game.add.text(100, 500, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
 
 		//this is to help with testing------------------------------------------------------------------------------------------------------------
 		scoreText = game.add.text(100, 400, 'bool: false', {fontSize: '32px', fill: '#000' });
@@ -229,6 +248,7 @@ Play.prototype = {
 		if(charging == true && pluggedIn == false && bool == false){
 			//change the pluggedIn boolean to true since the charger will be plugged into the phone 
 			pluggedIn = true;
+			
 			//now check again in another if statement to decide how long the charger will 
 			//stay in the phone charging 
 			if(charging == true && pluggedIn == true && bool == false){
@@ -241,23 +261,41 @@ Play.prototype = {
 				
 			}
 			
+			//pause the timer for the battery life
+			batteryTimer.pause();
+			
 		}
 		//changes bool back to false when the charger falls out so that we can go through the if statements again 
 		if(charging == false){
+			//change bool back to false to use again when overlap 
 			bool = false;
 			//stop the animation 
 			charger.animations.stop();
+			
+			//while the charger is not plugged in drain the battery life  
+			batteryTimer.resume();
 		}
+		
+		batteryText.text = batteryPercentage + '%';
 	}
 }
 
-
+//function fallingCharger 
 function fallingCharger(){
 	//move the y position of the charger to make it seem like it fell off 
-	charger.y += 100;
+	charger.y += 50;
 	//change the booleans to so the if statements won't start when the charger is already in the phone 
 	pluggedIn = false;
 	bool = true;
+}
+//function updateCounter
+//subtracts one percent by the alloted seconds in loop for the timer in Play create:function() 
+function updateCounter(){
+	//subtracts one from battery percentage 
+	batteryPercentage -= 1;
+	//changes text to match the new battery percentage 
+	
+	
 }
 //plays the animation  
 function collisionHandler(){
