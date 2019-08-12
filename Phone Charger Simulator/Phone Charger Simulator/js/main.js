@@ -9,6 +9,9 @@
 "use strict";
 //the start of the game 
 var game = new Phaser.Game(600, 800, Phaser.AUTO);
+
+//properties for main menu 
+var start_button;
 var bgMain;
 //use var Main Menu to create main menu 
 var MainMenu = function(game){};//---------------------------------------------------------------------
@@ -22,12 +25,16 @@ MainMenu.prototype = {
 		game.load.spritesheet('charger', 'assets/img/Charger.png', 98, 156);
 		game.load.image('phone', 'assets/img/Phone_2.0.png');
 		game.load.image('desk', 'assets/img/Desk.png');
-		game.load.atlas('buttons', 'assets/img/Buttons.png', 'assets/img/Buttons.json');
+		game.load.atlas('No_button', 'assets/img/No_Button.png', 'assets/img/No_Button.json');
+		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
+		game.load.atlas('Yes_button', 'assets/img/Yes_Button.png', 'assets/img/Yes_Button.json');
 	},
 	
 	create: function(){
 		//title 
-		bgMain = game.add.sprite(0, 0, 'backgroundMain');
+		bgMain = game.add.sprite(0, 0, 'desk');
+		var phoneMainMenu = game.add.sprite(game.width/2, game.height/2 - 100, 'phone');
+		phoneMainMenu.anchor.set(0.5);
 		//scale to fit background on screen 
 		//bgMain.scale.setTo(1, 1);
 		//game.stage.backgroundColor = "#4bb1b4";
@@ -75,20 +82,26 @@ MainMenu.prototype = {
 		game.add.text(32, 250, this.story_text, text_style);
 		
 		//How to begin the game 
-		text = "Press SPACEBAR to Play";
+		text = "Press SPACEBAR to go to instructions";
 		style = {font: "30px Arial", fill: "#fff", align: "center"};
 		var begin = this.game.add.text(this.game.width/2, this.game.height - 200, text, style);
 		begin.anchor.set(0.5);
+		
+		
+		
 		
 	},
 	
 	update: function(){
 		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			game.state.start('Play');
+			game.state.start('Instructions');
 		}
 	}
 }
+
+//variable for instructions 
+var instruction_desk;
 
 //this will be used to instruct the player on how to play the game using text 
 var Instructions = function(game){
@@ -101,43 +114,66 @@ Instructions.prototype = {
 	},
 	
 	create: function(){
-		//How to move character 
-		var text = "Press the arrow keys to move the player";
-		var style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var instruction = this.game.add.text(0, 100, text, style);
 		
+		instruction_desk = game.add.sprite(0, 0, 'desk');
+		//function for the text wrap
+		function addText(x, y, text) {
+			let textStyle = {
+				font: "Zapfino, Verdana",
+				align: "center",
+				fontSize: 32
+			};	
+			let new_text_element = game.add.text(x, y, text, textStyle);
+			this.text_elements.append(new_text_element);
+		}
 		
-		text = "Press down on the Z key to punch; hold down Z for rapid punching ";
-		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		instruction = this.game.add.text(0, 150, text, style);
-		//instruction.anchor.set(0.5);
+		//set up a pallete object
+		this.palette = {
+			A: '#1B1B3A',
+			B: '#693668',
+			C: '#A74482', 
+			D: '#F84AA7',
+			E: '#FF3562',
+			F: '#FFFFFF'
+		};
 		
-		text = "Punch the aliens and blocks in your way for points";
-		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		instruction = this.game.add.text(0, 200, text, style);
-		game.add.sprite(650, 180, 'TrumpAlien');
-		game.add.sprite(790, 190, 'kennyAtlas', 'bonus');
-		//instruction.anchor.set(0.5);
+		this.story_text = "Keep Your Phone Charged While answering questions";
 		
-		text = "Dodge the beams or you'll die";
-		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var instruction = this.game.add.text(0, 250, text, style);
-		//instruction.anchor.set(0.5);
+		//this allows us to change many things like the font or give the text the ability to wrap on its own 
+		let text_style = {
+			font: 'Times New Roman',
+			fontSize: 32, 
+			fill: this.palette.F,
+			//added in to give word wrap to the text 
+			wordWrap: true,
+			wordWrapWidth: 570,
+		};
 		
-		//How to begin the game 
-		text = "Press SPACEBAR to begin Playing";
-		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var begin = this.game.add.text(this.game.width/4, this.game.height - 200, text, style);
-		//begin.anchor.set(0.5);
+		//pasting the text onto the screen 
+		game.add.text(32, 100, this.story_text, text_style);
+		
+		this.story_text = "This is only a playtest for the multitasking portion of the game";
+		game.add.text(32, 200, this.story_text, text_style);
+		
+		this.story_text = "The narrative of the game is being written in twine";
+		game.add.text(32, 300, this.story_text, text_style);
+		
+		this.story_text = "click on start to begin the game";
+		game.add.text(32, 400, this.story_text, text_style);
+		
+		start_button = game.add.button(game.width/2, game.height - 200, 'Start_button', startGame, this, 'START_Button1', 'START_Button2');
+		start_button.anchor.set(0.5);
 		
 	},
 	
 	update: function(){
-		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			game.state.start('Play');
-		}
+		
 	}
+}
+
+function startGame(){
+	//the action that happens when you press the button 
+	game.state.start('Play');
 }
 
 //variables for the game 
@@ -147,11 +183,21 @@ var bool = false;
 //objects 
 var phone;
 var charger;
-var scoreText;
+
 var wiggle;
 var batteryTimer;
 var batteryPercentage;
 var batteryText;
+
+//testing objects 
+var no_button;
+var yes_button;
+var scoreText;
+var questions_Array;
+var question_text;
+var arrayPoint = 0;
+var button_press_count = 0;
+var button_bool = true;
 
 //use var GamePlay for the Play state
 var Play = function(game){
@@ -203,7 +249,7 @@ Play.prototype = {
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
 		//can be conpletely in the center of the game screen 
-		phone = game.add.sprite(game.width/2, game.height/2, 'phone');
+		phone = game.add.sprite(game.width/2, game.height/2 - 100, 'phone');
 		phone.anchor.set(0.5);
 		//phone.scale.setTo(0.75, 0.75);
 		
@@ -217,7 +263,7 @@ Play.prototype = {
 		
 		//battery life Timer-------------------------------------------------------------------------------------------
 		//battery percentage begins at random number
-		batteryPercentage = game.rnd.integerInRange(15, 20);
+		batteryPercentage = game.rnd.integerInRange(5, 10);
 		//create a basic custom timer for the batterylife
 		batteryTimer = game.time.create(false);
 		
@@ -231,16 +277,57 @@ Play.prototype = {
 		batteryText = game.add.text(100, 500, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
 
 		//this is to help with testing------------------------------------------------------------------------------------------------------------
-		scoreText = game.add.text(100, 400, 'bool: false', {fontSize: '32px', fill: '#000' });
+		scoreText = game.add.text(10, 25, 'score: 0', {fontSize: '32px', fill: '#fff' });
 		
+		//array for random questions testing 
+		questions_Array = ['will you play?', 'are you sure?', 'can you hit the buttons?', 'how about now?', 'now?', 'I wonder how long you will last?', 'ready?', 'Go!'];
 		
+		//function for the text wrap
+		function addText(x, y, text) {
+			let textStyle = {
+				font: "Zapfino, Verdana",
+				align: "center",
+				fontSize: 32
+			};	
+			let new_text_element = game.add.text(x, y, text, textStyle);
+			this.text_elements.append(new_text_element);
+		}
 		
+		//set up a pallete object
+		this.palette = {
+			A: '#1B1B3A',
+			B: '#693668',
+			C: '#A74482', 
+			D: '#F84AA7',
+			E: '#FF3562',
+			F: '#FFFFFF'
+		};
+		
+		//this allows us to change many things like the font or give the text the ability to wrap on its own 
+		let text_style = {
+			font: 'Times New Roman',
+			fontSize: 32, 
+			fill: this.palette.F,
+			//added in to give word wrap to the text 
+			wordWrap: true,
+			wordWrapWidth: 250,
+		};
+		
+		//pasting the text onto the screen 
+		question_text = game.add.text(165, 75, questions_Array[arrayPoint], text_style);
+		//random buttons to test out multitasking for our players and dialogue choice 
+		no_button = game.add.button(game.width/2, game.height/2 + 75, 'No_button', NoButton, this, 'No_Button2', 'No_Button1', 'No_Button3');
+		yes_button = game.add.button(game.width/2, game.height/2 + 20, 'Yes_button', YesButton, this, 'Yes_Button2', 'Yes_Button1', 'Yes_Button3');
+		
+		no_button.anchor.set(0.5);
+		yes_button.anchor.set(0.5);
 	},
 	
 	update: function(){
 		//play an animation that show the charger may fall out of the phone 
 		var charging = game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
-		scoreText.text = 'bool: ' + charging;
+		scoreText.text = 'score: ' + button_press_count;
+		question_text.text = questions_Array[arrayPoint];
 		//use if statement to decided when the charger will fall out of the phone
 		
 		//Charger is pluggedIn---------------------------------------------------------------------------------------------------------
@@ -255,7 +342,7 @@ Play.prototype = {
 			//stay in the phone charging 
 			if(charging == true && pluggedIn == true && bool == false){
 				//find a random integer to use 
-				var rndInteger = game.rnd.integerInRange(5, 10);
+				var rndInteger = game.rnd.integerInRange(3, 6);
 				//the animation is already playing as soon as the charger overlaps with the phone 
 				//this will decide what to do next after the seconds are over 
 				game.time.events.add(Phaser.Timer.SECOND*rndInteger, fallingCharger, this);
@@ -264,6 +351,15 @@ Play.prototype = {
 			}
 			//pause the timer for the battery life
 			batteryTimer.pause();	
+			
+			//if charger is plugged in make buttons visible 
+			if(button_bool == false){
+				//decides whether the player can see the buttons or not 
+				yes_button.visible =! yes_button.visible;
+				no_button.visible =! no_button.visible;
+				//button boolean variable
+				button_bool = true;
+			}
 		}
 		//charger is not pluggedIn---------------------------------------------------------------------------------------------------------
 		
@@ -277,6 +373,14 @@ Play.prototype = {
 			
 			//while the charger is not plugged in drain the battery life  
 			batteryTimer.resume();
+			//make the button invisible if charger is not plugged in(testing)
+			if(button_bool == true){
+				//decides whether the player can see the buttons or not 
+				yes_button.visible =! yes_button.visible;
+				no_button.visible =! no_button.visible;
+				//button boolean variable 
+				button_bool = false;
+			}
 		}
 		//other--------------------------------------------------------------------------------------------------------------
 		//update the text displayed for the battery life 
@@ -314,6 +418,34 @@ function collisionHandler(){
 	//console.log('wiggle');
 }
 
+//function NoButton 
+function NoButton(){
+	game.state.start('GameOver');
+}
+
+//function YesButton 
+function YesButton(){
+	//the buttons will move around at a certain point 
+	if(arrayPoint >= 2){
+		yes_button.x = game.rnd.integerInRange(0, game.width);
+		yes_button.y = game.rnd.integerInRange(0, game.height - 50);
+		
+		no_button.x = game.rnd.integerInRange(0, game.width);
+		no_button.y = game.rnd.integerInRange(0, game.height - 50);
+	}
+	
+	if(arrayPoint < 7){
+		//this statement will stop adding when the array reaches the end
+		arrayPoint += 1;
+	}
+	//an if statement to create a score for fun 
+	if(arrayPoint >= 7){
+		button_press_count += 25;
+	}
+	
+}
+
+var deskGameOver;
 //Use var GameOver for gameOver state 
 var GameOver = function(game){};
 
@@ -325,8 +457,11 @@ GameOver.prototype = {
 	
 	create: function(){
 		//Creating text for the game over screen 
-		game.stage.backgroundColor = "#4bb1b4";
-		var text = "You Got Blocked Loser";
+		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'desk');
+		deskGameOver.anchor.set(0.5);
+		
+		
+		var text = "You Lose";
 		var style = {font: "30px Arial", fill: "#fff", align: "center" };
 		var retry = this.game.add.text(this.game.width/2, this.game.height - 200, text, style);
 		retry.anchor.set(0.5);
@@ -342,13 +477,19 @@ GameOver.prototype = {
 		retry = this.game.add.text(this.game.width/2, 200, text, style);
 		retry.anchor.set(0.5);
 		
+		//score (testing process)
+		text = scoreText.text;
+		style = {font: "32px", fill: "#fff", align: "center" };
+		var score = this.game.add.text(10, 25, text, style);
+		
 	},
 	
 	update: function(){
 		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
 			//also a place where we can reset any values
-			game.state.start('Play');
+			button_press_count = 0;
+			game.state.start('MainMenu');
 		}
 	}
 }
