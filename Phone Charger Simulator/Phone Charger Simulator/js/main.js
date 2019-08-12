@@ -22,6 +22,7 @@ MainMenu.prototype = {
 		game.load.spritesheet('charger', 'assets/img/Charger.png', 98, 156);
 		game.load.image('phone', 'assets/img/Phone_2.0.png');
 		game.load.image('desk', 'assets/img/Desk.png');
+		game.load.atlas('buttons', 'assets/img/Buttons.png', 'assets/img/Buttons.json');
 	},
 	
 	create: function(){
@@ -242,6 +243,7 @@ Play.prototype = {
 		scoreText.text = 'bool: ' + charging;
 		//use if statement to decided when the charger will fall out of the phone
 		
+		//Charger is pluggedIn---------------------------------------------------------------------------------------------------------
 		//bool is there to make sure that the update function doesn't continuously repeat the same process over and over 
 		//unless bool is false
 		//It will only go through the if statements at the initial first overlap 
@@ -260,12 +262,13 @@ Play.prototype = {
 				//this function will only happen after the seconds are over 
 				
 			}
-			
 			//pause the timer for the battery life
-			batteryTimer.pause();
-			
+			batteryTimer.pause();	
 		}
+		//charger is not pluggedIn---------------------------------------------------------------------------------------------------------
+		
 		//changes bool back to false when the charger falls out so that we can go through the if statements again 
+		
 		if(charging == false){
 			//change bool back to false to use again when overlap 
 			bool = false;
@@ -275,8 +278,14 @@ Play.prototype = {
 			//while the charger is not plugged in drain the battery life  
 			batteryTimer.resume();
 		}
-		
+		//other--------------------------------------------------------------------------------------------------------------
+		//update the text displayed for the battery life 
 		batteryText.text = batteryPercentage + '%';
+		//if batteryPercentage hits zero you lose the game 
+		if(batteryPercentage <= 0){
+			game.state.start('GameOver');
+		}
+		
 	}
 }
 
@@ -317,9 +326,14 @@ GameOver.prototype = {
 	create: function(){
 		//Creating text for the game over screen 
 		game.stage.backgroundColor = "#4bb1b4";
-		var text = "Press SPACEBAR to retry";
+		var text = "You Got Blocked Loser";
 		var style = {font: "30px Arial", fill: "#fff", align: "center" };
 		var retry = this.game.add.text(this.game.width/2, this.game.height - 200, text, style);
+		retry.anchor.set(0.5);
+		
+		text = "press SPACEBAR to go back to main menu";
+		style = {font: "30px Arial", fill: "#fff", align: "center" };
+		retry = this.game.add.text(this.game.width/2, this.game.height - 100, text, style);
 		retry.anchor.set(0.5);
 		
 		//GAME OVER
