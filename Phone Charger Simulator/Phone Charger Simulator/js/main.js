@@ -13,6 +13,7 @@ var game = new Phaser.Game(600, 800, Phaser.AUTO);
 //properties for main menu 
 var start_button;
 var bgMain;
+var music;
 //use var Main Menu to create main menu 
 var MainMenu = function(game){};//---------------------------------------------------------------------
 
@@ -28,6 +29,8 @@ MainMenu.prototype = {
 		game.load.atlas('No_button', 'assets/img/No_Button.png', 'assets/img/No_Button.json');
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
 		game.load.atlas('Yes_button', 'assets/img/Yes_Button.png', 'assets/img/Yes_Button.json');
+		game.load.audio('pop', 'assets/audio/pop01.mp3');
+		game.load.audio('music', ['assets/music/Inspiration-pop-music.mp3', 'assets/music/Inspiration-pop-music.wav'] );
 	},
 	
 	create: function(){
@@ -87,7 +90,10 @@ MainMenu.prototype = {
 		var begin = this.game.add.text(this.game.width/2, this.game.height - 200, text, style);
 		begin.anchor.set(0.5);
 		
+		//play music background
+		music = game.add.audio('music', 0.5, true)
 		
+		game.sound.setDecodedCallback(music, start, this);
 		
 		
 	},
@@ -98,6 +104,10 @@ MainMenu.prototype = {
 			game.state.start('Instructions');
 		}
 	}
+}
+
+function start(){
+	music.play();
 }
 
 //variable for instructions 
@@ -215,6 +225,8 @@ Play.prototype = {
 	},
 	
 	create: function(){
+		//stop music 
+		music.stop();
 		//where we create the background, platforms, player, baddies, and collectibles
 		game.stage.backgroundColor = "#4bb1b4";
 		//physics for the game using ARCADE Physics 
@@ -425,6 +437,9 @@ function NoButton(){
 
 //function YesButton 
 function YesButton(){
+	//play audio 
+	game.sound.play('pop');
+	
 	//the buttons will move around at a certain point 
 	if(arrayPoint >= 2){
 		yes_button.x = game.rnd.integerInRange(0, game.width);
