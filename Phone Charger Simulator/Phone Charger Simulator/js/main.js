@@ -181,7 +181,7 @@ Play.prototype = {
 		
 		//Charger-----------------------------------------------------------------------------------------------------
 		//the charger being added as a var in the game 
-		charger = game.add.sprite(game.width/2, game.height - 100, 'charger');
+		charger = game.add.sprite(game.width/2, game.height - 25, 'charger');
 		//set rotation point of charger to be at it's center 
 		charger.anchor.set(0.5);
 		//set scale for charger 
@@ -197,7 +197,7 @@ Play.prototype = {
 		charger.body.setSize(29, 17, 38, 2);
 		
 		//animation for the charger wiggling out of the phone 
-		charger.animations.add('wiggle', [0,1,2,3], 15, true);
+		charger.animations.add('wiggle', [0,1,2,3], 4, true);
 		
 		//Phone------------------------------------------------------------------------------------------------------
 		//for phone image 
