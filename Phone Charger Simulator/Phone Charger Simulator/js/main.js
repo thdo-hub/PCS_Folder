@@ -30,6 +30,7 @@ MainMenu.prototype = {
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
 		game.load.atlas('Yes_button', 'assets/img/Yes_Button.png', 'assets/img/Yes_Button.json');
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
+		//music by PapaninKasettratat
 		game.load.audio('music', ['assets/music/Inspiration-pop-music.mp3', 'assets/music/Inspiration-pop-music.wav'] );
 	},
 	
