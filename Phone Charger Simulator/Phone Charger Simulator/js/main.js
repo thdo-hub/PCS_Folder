@@ -174,7 +174,13 @@ Instructions.prototype = {
 		this.story_text = "click on start to begin the game";
 		game.add.text(32, 400, this.story_text, text_style);
 		
-		start_button = game.add.button(game.width/2, game.height - 200, 'Start_button', startGame, this, 'START_Button1', 'START_Button2');
+		this.story_text = "Use the mouse to click and drag the charger and press the buttons";
+		game.add.text(32, 450, this.story_text, text_style);
+		
+		this.story_text = "The charger must be plugged in to press the buttons";
+		game.add.text(32, 525, this.story_text, text_style);
+		
+		start_button = game.add.button(game.width/2, game.height - 100, 'Start_button', startGame, this, 'START_Button1', 'START_Button2');
 		start_button.anchor.set(0.5);
 		
 	},
@@ -341,7 +347,7 @@ Play.prototype = {
 	update: function(){
 		//play an animation that show the charger may fall out of the phone 
 		var charging = game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
-		scoreText.text = 'score: ' + button_bool;
+		scoreText.text = 'score: ' + button_press_count;
 		question_text.text = questions_Array[arrayPoint];
 		//use if statement to decided when the charger will fall out of the phone
 		
