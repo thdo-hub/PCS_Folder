@@ -3,6 +3,8 @@
 //Teresa
 //Preeti
 //Thomas
+//github link: https://github.com/thdo-hub/PCS_Folder     
+// there is an ' _ ' between the PCS and Folder just so you know 
 
 
 // let's keep our code tidy with strict mode ??
@@ -339,7 +341,7 @@ Play.prototype = {
 	update: function(){
 		//play an animation that show the charger may fall out of the phone 
 		var charging = game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
-		scoreText.text = 'score: ' + button_press_count;
+		scoreText.text = 'score: ' + button_bool;
 		question_text.text = questions_Array[arrayPoint];
 		//use if statement to decided when the charger will fall out of the phone
 		
@@ -501,10 +503,30 @@ GameOver.prototype = {
 	},
 	
 	update: function(){
+		
+		//make the buttons invisible at the start if they lose when charger is pluggedIn 
+		//since when the charger is pluggedIn and they lose the buttons will become visible
+		//when they play again instead of refreshing the page.
+		if(button_bool == true){
+			yes_button.visible =! yes_button.visible;
+			no_button.visible =! no_button.visible;
+			//change the boolean so that update doesn't continuously activate the if statement 
+			button_bool = false;
+		}
+			
 		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
 			//also a place where we can reset any values
 			button_press_count = 0;
+			arrayPoint = 0;
+			
+			
+			//change booleans back to original values 
+			pluggedIn = false;
+			bool = false;
+			button_bool = true;
+			
+			//changing the state must come last 
 			game.state.start('MainMenu');
 		}
 	}
