@@ -39,7 +39,8 @@ MainMenu.prototype = {
 	create: function(){
 		//title 
 		bgMain = game.add.sprite(0, 0, 'desk');
-		var phoneMainMenu = game.add.sprite(game.width/2, game.height/2 - 100, 'phone');
+		var phoneMainMenu = game.add.sprite(game.width/2, game.height/2 - 40, 'phone');
+		phoneMainMenu.scale.setTo(1.25, 1.25);
 		phoneMainMenu.anchor.set(0.5);
 		//scale to fit background on screen 
 		//bgMain.scale.setTo(1, 1);
@@ -270,9 +271,9 @@ Play.prototype = {
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
 		//can be conpletely in the center of the game screen 
-		phone = game.add.sprite(game.width/2, game.height/2 - 100, 'phone');
+		phone = game.add.sprite(game.width/2, game.height/2 - 40, 'phone');
 		phone.anchor.set(0.5);
-		//phone.scale.setTo(0.75, 0.75);
+		phone.scale.setTo(1.25, 1.25);
 		
 		//phone is given a body to interact with the charger's body and given physics as well
 		phone.enableBody = true;
