@@ -10,7 +10,7 @@
 // let's keep our code tidy with strict mode ??
 "use strict";
 //the start of the game 
-var game = new Phaser.Game(600, 800, Phaser.AUTO);
+var game = new Phaser.Game(720, 650, Phaser.AUTO);
 
 //properties for main menu 
 var start_button;
@@ -37,10 +37,17 @@ MainMenu.prototype = {
 	},
 	
 	create: function(){
+		//changes the bounds of the world to not be just the canvas
+		game.world.setBounds(0, 0, 720, 960);
+		game.camera.setPosition(0, 800);
+		
 		//title 
-		bgMain = game.add.sprite(0, 0, 'desk');
-		var phoneMainMenu = game.add.sprite(game.width/2, game.height/2 - 40, 'phone');
-		phoneMainMenu.scale.setTo(1.25, 1.25);
+		bgMain = game.add.tileSprite(0, 0, 720, 960, 'desk');
+		
+		
+		
+		var phoneMainMenu = game.add.sprite(game.width/2, 480, 'phone');
+		phoneMainMenu.scale.setTo(1.35, 1.35);
 		phoneMainMenu.anchor.set(0.5);
 		//scale to fit background on screen 
 		//bgMain.scale.setTo(1, 1);
@@ -70,7 +77,7 @@ MainMenu.prototype = {
 		//Title text 
 		var text = "Phone Charger Simulator";
 		var style = {font: "50px Arial", fill: "#fff", align: "center" };
-		var title = this.game.add.text(this.game.width/2, this.game.height/4, text, style);
+		var title = this.game.add.text(this.game.width/2, 400, text, style);
 		title.anchor.set(0.5);
 		//other text 
 		this.story_text = "Keep Your Phone Charged While Texting Your Significant Other";
@@ -86,13 +93,13 @@ MainMenu.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		game.add.text(32, 250, this.story_text, text_style);
+		game.add.text(32, 550, this.story_text, text_style);
 		
 		//How to begin the game 
 		text = "Press SPACEBAR to go to instructions";
 		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var begin = this.game.add.text(this.game.width/2, this.game.height - 200, text, style);
-		begin.anchor.set(0.5);
+		var begin = this.game.add.text(32, 650, text, style);
+		
 		
 		//play music background
 		music = game.add.audio('music', 0.5, true)
@@ -128,6 +135,9 @@ Instructions.prototype = {
 	},
 	
 	create: function(){
+		//changes the bounds of the world to not be just the canvas
+		game.world.setBounds(0, 0, 720, 960);
+		game.camera.setPosition(0, 800);
 		
 		instruction_desk = game.add.sprite(0, 0, 'desk');
 		//function for the text wrap
@@ -164,24 +174,27 @@ Instructions.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		game.add.text(32, 100, this.story_text, text_style);
+		game.add.text(32, 350, this.story_text, text_style);
 		
 		this.story_text = "This is only a playtest for the multitasking portion of the game";
-		game.add.text(32, 200, this.story_text, text_style);
+		game.add.text(32, 425, this.story_text, text_style);
 		
 		this.story_text = "The narrative of the game is being written in twine";
-		game.add.text(32, 300, this.story_text, text_style);
+		game.add.text(32, 500, this.story_text, text_style);
 		
 		this.story_text = "click on start to begin the game";
-		game.add.text(32, 400, this.story_text, text_style);
+		game.add.text(32, 575, this.story_text, text_style);
 		
 		this.story_text = "Use the mouse to click and drag the charger and press the buttons";
-		game.add.text(32, 450, this.story_text, text_style);
+		game.add.text(32, 625, this.story_text, text_style);
 		
 		this.story_text = "The charger must be plugged in to press the buttons";
-		game.add.text(32, 525, this.story_text, text_style);
+		game.add.text(32, 700, this.story_text, text_style);
 		
-		start_button = game.add.button(game.width/2, game.height - 100, 'Start_button', startGame, this, 'START_Button1', 'START_Button2');
+		this.story_text = "Use W to move camera up and S to move camera down";
+		game.add.text(32, 775, this.story_text, text_style);
+		
+		start_button = game.add.button(game.width/2, 850, 'Start_button', startGame, this, 'START_Button1', 'START_Button2');
 		start_button.anchor.set(0.5);
 		
 	},
@@ -200,6 +213,7 @@ function startGame(){
 //booleans
 var pluggedIn = false; 
 var bool = false;
+var timerBool = false;
 //objects 
 var phone;
 var charger;
@@ -208,6 +222,8 @@ var wiggle;
 var batteryTimer;
 var batteryPercentage;
 var batteryText;
+var keepChargerInPlaceY = 0;
+var keepChargerInPlaceX = 0;
 
 //testing objects 
 var no_button;
@@ -235,6 +251,15 @@ Play.prototype = {
 	},
 	
 	create: function(){
+		//changes the bounds of the world to not be just the canvas
+		game.world.setBounds(0, 0, 720, 960);
+		//have the camera start at the bottom 
+		game.camera.setPosition(0, 960);
+		//720 is the width of the game world not the canvas and 960 is the height 
+		//of the game world not the canvas 
+		
+		//game.width and game.height takes the size of the canvas not the world 
+		
 		//stop music 
 		music.stop();
 		//where we create the background, platforms, player, baddies, and collectibles
@@ -244,12 +269,12 @@ Play.prototype = {
 
 		//The background desk for the game
 		//The ratation point has been placed in the center 
-		var desk = game.add.sprite(game.width/2, game.height/2, 'desk');
+		var desk = game.add.sprite(360, 480, 'desk');
 		desk.anchor.set(0.5);
 		
 		//Charger-----------------------------------------------------------------------------------------------------
 		//the charger being added as a var in the game 
-		charger = game.add.sprite(game.width/2, game.height - 25, 'charger');
+		charger = game.add.sprite(game.width/2, 960, 'charger');
 		//set rotation point of charger to be at it's center 
 		charger.anchor.set(0.5);
 		//set scale for charger 
@@ -271,16 +296,16 @@ Play.prototype = {
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
 		//can be conpletely in the center of the game screen 
-		phone = game.add.sprite(game.width/2, game.height/2 - 40, 'phone');
+		phone = game.add.sprite(game.width/2, 400, 'phone');
 		phone.anchor.set(0.5);
-		phone.scale.setTo(1.25, 1.25);
+		phone.scale.setTo(1.35, 1.35);
 		
 		//phone is given a body to interact with the charger's body and given physics as well
 		phone.enableBody = true;
 		game.physics.arcade.enable(phone);
 		//changes the hitbox(width, height, x, y) so that only a small part of the phone can interact with the charger 
 		//for the charging function of the game 
-		phone.body.setSize(44, 50, 144, 512);
+		//phone.body.setSize(44, 50, 144, 512);
 		
 		
 		//battery life Timer-------------------------------------------------------------------------------------------
@@ -296,10 +321,10 @@ Play.prototype = {
 		batteryTimer.start();
 		
 		//add the battery life in as text 
-		batteryText = game.add.text(100, 500, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
+		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
 
 		//this is to help with testing------------------------------------------------------------------------------------------------------------
-		scoreText = game.add.text(10, 25, 'score: 0', {fontSize: '32px', fill: '#fff' });
+		scoreText = game.add.text(10, game.height - 100, 'score: 0', {fontSize: '32px', fill: '#fff' });
 		
 		//array for random questions testing 
 		questions_Array = ['will you play?', 'are you sure?', 'can you hit the buttons?', 'how about now?', 'now?', 'I wonder how long you will last?', 'ready?', 'Go!'];
@@ -336,18 +361,27 @@ Play.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		question_text = game.add.text(165, 75, questions_Array[arrayPoint], text_style);
+		question_text = game.add.text(175, 250, questions_Array[arrayPoint], text_style);
 		//random buttons to test out multitasking for our players and dialogue choice 
-		no_button = game.add.button(game.width/2, game.height/2 + 75, 'No_button', NoButton, this, 'No_Button2', 'No_Button1', 'No_Button3');
-		yes_button = game.add.button(game.width/2, game.height/2 + 20, 'Yes_button', YesButton, this, 'Yes_Button2', 'Yes_Button1', 'Yes_Button3');
+		no_button = game.add.button(game.width/2, 610, 'No_button', NoButton, this, 'No_Button2', 'No_Button1', 'No_Button3');
+		yes_button = game.add.button(game.width/2, 550, 'Yes_button', YesButton, this, 'Yes_Button2', 'Yes_Button1', 'Yes_Button3');
 		
 		no_button.anchor.set(0.5);
 		yes_button.anchor.set(0.5);
 	},
 	
 	update: function(){
+		//camera controls with wasd keys
+		if(game.input.keyboard.isDown(Phaser.Keyboard.W) ){
+			game.camera.y -= 10;
+		}
+		if(game.input.keyboard.isDown(Phaser.Keyboard.S) ){
+			game.camera.y += 10;
+		}
+		
 		//play an animation that show the charger may fall out of the phone 
 		var charging = game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
+		//scoreText.text = 'score: ' + button_press_count;
 		scoreText.text = 'score: ' + button_press_count;
 		question_text.text = questions_Array[arrayPoint];
 		//use if statement to decided when the charger will fall out of the phone
@@ -360,16 +394,25 @@ Play.prototype = {
 			//change the pluggedIn boolean to true since the charger will be plugged into the phone 
 			pluggedIn = true;
 			
+			keepChargerInPlaceY = charger.y;
+			//the x has a magic number 
+			keepChargerInPlaceX = 359;
+			
 			//now check again in another if statement to decide how long the charger will 
 			//stay in the phone charging 
-			if(charging == true && pluggedIn == true && bool == false){
+			while(charging == true && pluggedIn == true && bool == false){
+				
+				if(timerBool == true){
+					// get out of the loop if timerBool is true;
+					break;
+				}
 				//find a random integer to use 
 				var rndInteger = game.rnd.integerInRange(3, 6);
 				//the animation is already playing as soon as the charger overlaps with the phone 
 				//this will decide what to do next after the seconds are over 
 				game.time.events.add(Phaser.Timer.SECOND*rndInteger, fallingCharger, this);
 				//this function will only happen after the seconds are over 
-				
+				timerBool = true;
 			}
 			//pause the timer for the battery life
 			batteryTimer.pause();	
@@ -383,13 +426,20 @@ Play.prototype = {
 				button_bool = true;
 			}
 		}
+		
+		//keep charger in place 
+		if(charging == true){
+			charger.y = keepChargerInPlaceY - 17;
+			charger.x = keepChargerInPlaceX;
+		}
 		//charger is not pluggedIn---------------------------------------------------------------------------------------------------------
 		
 		//changes bool back to false when the charger falls out so that we can go through the if statements again 
 		
 		if(charging == false){
-			//change bool back to false to use again when overlap 
+			//change booleans back to false to use again when overlap 
 			bool = false;
+			pluggedIn = false;
 			//stop the animation 
 			charger.animations.stop();
 			
@@ -417,11 +467,16 @@ Play.prototype = {
 
 //function fallingCharger 
 function fallingCharger(){
+	//everything in fallingCharger happens after a certain amount of time from the timer event 
+	
 	//move the y position of the charger to make it seem like it fell off 
-	charger.y += 50;
+	//since the if statement in update has charger.y be this (var - 25) then it's okay to say this
+	keepChargerInPlaceY = 960;
+	
 	//change the booleans to so the if statements won't start when the charger is already in the phone 
 	pluggedIn = false;
 	bool = true;
+	timerBool = false;
 }
 //function updateCounter
 //subtracts one percent by the alloted seconds in loop for the timer in Play create:function() 
@@ -481,6 +536,9 @@ GameOver.prototype = {
 	},
 	
 	create: function(){
+		//changes the bounds of the world to not be just the canvas
+		game.world.setBounds(0, 0, 720, 960);
+		game.camera.setPosition(0, 0);
 		//Creating text for the game over screen 
 		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'desk');
 		deskGameOver.anchor.set(0.5);
@@ -532,6 +590,7 @@ GameOver.prototype = {
 			pluggedIn = false;
 			bool = false;
 			button_bool = true;
+			timerBool = false;
 			
 			//changing the state must come last 
 			game.state.start('MainMenu');
