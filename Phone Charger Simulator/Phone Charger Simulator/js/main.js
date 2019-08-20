@@ -25,8 +25,9 @@ MainMenu.prototype = {
 	preload: function(){
 		//preload assets for the game 
 		game.load.image('backgroundMain', 'assets/img/bg2.png');
-		game.load.spritesheet('charger', 'assets/img/Charger.png', 98, 156);
-		game.load.image('phone', 'assets/img/Phone_2.0.png');
+		game.load.spritesheet('charger', 'assets/img/Charger_Broken_Full.png', 64, 225);
+		game.load.image('phoneFrame', 'assets/img/Phone_Frame.png');
+		game.load.image('phoneScreen', 'assets/img/Phone_Background.png');
 		game.load.image('desk', 'assets/img/Desk.png');
 		game.load.atlas('No_button', 'assets/img/No_Button.png', 'assets/img/No_Button.json');
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
@@ -46,9 +47,13 @@ MainMenu.prototype = {
 		
 		
 		
-		var phoneMainMenu = game.add.sprite(game.width/2, 480, 'phone');
-		phoneMainMenu.scale.setTo(1.35, 1.35);
-		phoneMainMenu.anchor.set(0.5);
+		var phoneFrameMainMenu = game.add.sprite(game.width/2, 480, 'phoneFrame');
+		phoneFrameMainMenu.scale.setTo(1.35, 1.35);
+		phoneFrameMainMenu.anchor.set(0.5);
+		
+		var phoneScreenMainMenu = game.add.sprite(game.width/2 + 3, 447, 'phoneScreen');
+		phoneScreenMainMenu.scale.setTo(1.35, 1.35);
+		phoneScreenMainMenu.anchor.set(0.5);
 		//scale to fit background on screen 
 		//bgMain.scale.setTo(1, 1);
 		//game.stage.backgroundColor = "#4bb1b4";
@@ -215,7 +220,8 @@ var pluggedIn = false;
 var bool = false;
 var timerBool = false;
 //objects 
-var phone;
+var phoneFramePlay;
+var phoneScreenPlay;
 var charger;
 
 var wiggle;
@@ -287,22 +293,29 @@ Play.prototype = {
 		charger.enableBody = true;
 		game.physics.arcade.enable(charger);
 		//changes the hitbox(width, height, x, y) so that only the tip of the charger does anything when hit 
-		charger.body.setSize(29, 17, 38, 2);
+		charger.body.setSize(26, 19, 18, 0);
 		
 		//animation for the charger wiggling out of the phone 
 		charger.animations.add('wiggle', [0,1,2,3], 4, true);
+		charger.frame = 5;
+		//charger.animations.add();
 		
 		//Phone------------------------------------------------------------------------------------------------------
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
 		//can be conpletely in the center of the game screen 
-		phone = game.add.sprite(game.width/2, 400, 'phone');
-		phone.anchor.set(0.5);
-		phone.scale.setTo(1.35, 1.35);
+		phoneFramePlay = game.add.sprite(game.width/2, 400, 'phoneFrame');
+		phoneFramePlay.anchor.set(0.5);
+		phoneFramePlay.scale.setTo(1.35, 1.35);
+		
+		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 367, 'phoneScreen');
+		phoneScreenPlay.anchor.set(0.5);
+		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
 		//phone is given a body to interact with the charger's body and given physics as well
-		phone.enableBody = true;
-		game.physics.arcade.enable(phone);
+		phoneFramePlay.enableBody = true;
+		game.physics.arcade.enable(phoneFramePlay);
+		
 		//changes the hitbox(width, height, x, y) so that only a small part of the phone can interact with the charger 
 		//for the charging function of the game 
 		//phone.body.setSize(44, 50, 144, 512);
@@ -380,7 +393,7 @@ Play.prototype = {
 		}
 		
 		//play an animation that show the charger may fall out of the phone 
-		var charging = game.physics.arcade.overlap(phone, charger, collisionHandler, null, this);
+		var charging = game.physics.arcade.overlap(phoneFramePlay, charger, collisionHandler, null, this);
 		//scoreText.text = 'score: ' + button_press_count;
 		scoreText.text = 'score: ' + button_press_count;
 		question_text.text = questions_Array[arrayPoint];
@@ -393,9 +406,9 @@ Play.prototype = {
 		if(charging == true && pluggedIn == false && bool == false){
 			//change the pluggedIn boolean to true since the charger will be plugged into the phone 
 			pluggedIn = true;
-			
-			keepChargerInPlaceY = charger.y;
-			//the x has a magic number 
+			//the y is a magic number 
+			keepChargerInPlaceY = 890;
+			//the x is a magic number 
 			keepChargerInPlaceX = 359;
 			
 			//now check again in another if statement to decide how long the charger will 
@@ -442,6 +455,7 @@ Play.prototype = {
 			pluggedIn = false;
 			//stop the animation 
 			charger.animations.stop();
+			charger.frame = 5;
 			
 			//while the charger is not plugged in drain the battery life  
 			batteryTimer.resume();
@@ -470,7 +484,7 @@ function fallingCharger(){
 	//everything in fallingCharger happens after a certain amount of time from the timer event 
 	
 	//move the y position of the charger to make it seem like it fell off 
-	//since the if statement in update has charger.y be this (var - 25) then it's okay to say this
+	//since the if statement in update has charger.y be this (var - 17) then it's okay to say this
 	keepChargerInPlaceY = 960;
 	
 	//change the booleans to so the if statements won't start when the charger is already in the phone 
