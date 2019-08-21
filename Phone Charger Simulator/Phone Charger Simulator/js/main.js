@@ -308,7 +308,7 @@ Play.prototype = {
 		phoneFramePlay.anchor.set(0.5);
 		phoneFramePlay.scale.setTo(1.35, 1.35);
 		
-		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 367, 'phoneScreen');
+		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
 		phoneScreenPlay.anchor.set(0.5);
 		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
@@ -593,18 +593,17 @@ GameOver.prototype = {
 			button_bool = false;
 		}
 			
+		//change booleans back to original values 
+		pluggedIn = false;
+		bool = false;
+		timerBool = false;
+		button_press_count = 0;
+		arrayPoint = 0;
+		
 		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
 			//also a place where we can reset any values
-			button_press_count = 0;
-			arrayPoint = 0;
-			
-			
-			//change booleans back to original values 
-			pluggedIn = false;
-			bool = false;
 			button_bool = true;
-			timerBool = false;
 			
 			//changing the state must come last 
 			game.state.start('MainMenu');
@@ -619,5 +618,3 @@ game.state.add('Play', Play);
 game.state.add('GameOver', GameOver);
 game.state.add('Instructions', Instructions);
 game.state.start('MainMenu');
-
-
