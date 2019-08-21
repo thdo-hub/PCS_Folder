@@ -11,6 +11,7 @@
 "use strict";
 //the start of the game 
 var game = new Phaser.Game(720, 650, Phaser.AUTO);
+var storyrunner = new bondage.Runner();
 
 //properties for main menu 
 var start_button;
@@ -35,12 +36,17 @@ MainMenu.prototype = {
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
 		//music by PapaninKasettratat
 		game.load.audio('music', ['assets/music/Inspiration-pop-music.mp3', 'assets/music/Inspiration-pop-music.wav'] );
+		//json file 
+		game.load.json('story', 'assets/json/phonestory.json');
 	},
 	
 	create: function(){
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 800);
+		
+		//loading storyrunner into phaser
+		storyrunner.load(game.cache.getJSON('story'));
 		
 		//title 
 		bgMain = game.add.tileSprite(0, 0, 720, 960, 'desk');
@@ -231,6 +237,10 @@ var batteryText;
 var keepChargerInPlaceY = 0;
 var keepChargerInPlaceX = 0;
 
+//dialogue variables 
+var dialogue;
+var result;
+
 //testing objects 
 var no_button;
 var yes_button;
@@ -266,6 +276,12 @@ Play.prototype = {
 		
 		//game.width and game.height takes the size of the canvas not the world 
 		
+		//dialogue beginning
+		//so dialogue begins at the first node called start
+		dialogue = storyrunner.run('Start');
+		//result contains the first text that is in dialogue
+		//saying dialogue.next() again will give result the options under the text in an array 
+		result = dialogue.next();
 		//stop music 
 		music.stop();
 		//where we create the background, platforms, player, baddies, and collectibles
