@@ -34,6 +34,7 @@ MainMenu.prototype = {
 		game.load.image('phoneFrame', 'assets/img/Phone_Frame.png');
 		game.load.image('phoneScreen', 'assets/img/Phone_Background.png');
 		game.load.image('desk', 'assets/img/Desk.png');
+		game.load.image('deskHole', 'assets/img/Desk_Hole.png');
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
 		//music by PapaninKasettratat
@@ -277,72 +278,17 @@ Play.prototype = {
 		game.stage.backgroundColor = "#4bb1b4";
 		//physics for the game using ARCADE Physics 
 		game.physics.startSystem(Phaser.Physics.ARCADE);
-
-		//The background desk for the game
-		//The ratation point has been placed in the center 
-		var desk = game.add.sprite(360, 480, 'desk');
-		desk.anchor.set(0.5);
 		
-		//Charger-----------------------------------------------------------------------------------------------------
-		//the charger being added as a var in the game 
-		charger = game.add.sprite(game.width/2, 960, 'charger');
-		//set rotation point of charger to be at it's center 
-		charger.anchor.set(0.5);
-		//set scale for charger 
-		//charger.scale.setTo(0.75, 0.75);
-		
-		//enables input such as drag to be true on the charger so we can drag it with the mouse
-		charger.inputEnabled = true;
-		charger.input.enableDrag(true);
-		//enable body for the charger to use physics 
-		charger.enableBody = true;
-		game.physics.arcade.enable(charger);
-		//changes the hitbox(width, height, x, y) so that only the tip of the charger does anything when hit 
-		charger.body.setSize(26, 19, 18, 0);
-		
-		//animation for the charger wiggling out of the phone 
-		charger.animations.add('wiggle', [0,1,2,3], 4, true);
-		charger.frame = 5;
-		//charger.animations.add();
-		
-		//Phone------------------------------------------------------------------------------------------------------
+		//PhoneScreen------------------------------------------------------------------------------------------------------
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
 		//can be conpletely in the center of the game screen 
 		
-		/*phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
+		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
 		phoneScreenPlay.anchor.set(0.5);
 		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
-		phoneFramePlay = game.add.sprite(game.width/2, 400, 'phoneFrame');
-		phoneFramePlay.anchor.set(0.5);
-		phoneFramePlay.scale.setTo(1.35, 1.35);
-
-		//phone is given a body to interact with the charger's body and given physics as well
-		phoneFramePlay.enableBody = true;
-		game.physics.arcade.enable(phoneFramePlay);
-		
-		//changes the hitbox(width, height, x, y) so that only a small part of the phone can interact with the charger 
-		//for the charging function of the game 
-		//phone.body.setSize(44, 50, 144, 512);
-		
-	*/	
-		//battery life Timer-------------------------------------------------------------------------------------------
-		//battery percentage begins at random number
-		batteryPercentage = game.rnd.integerInRange(5, 10);
-		//create a basic custom timer for the batterylife
-		batteryTimer = game.time.create(false);
-		
-		//the loop to subtract one percent every few seconds 
-		batteryTimer.loop(3000, updateCounter, this);
-		//the integer is counting in thousands since it counts in milliseconds (i.e. 2000 is 2 seconds) 
-		//for the custom timer you must remember to start it on your own for it to work
-		batteryTimer.start();
-		
-		//add the battery life in as text 
-		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
-		
-		//dialogue beginning----------------------------------------------------------------------------------------------
+		//Text-------------------------------------------------------------------------------------------------------------
 		//so dialogue begins at the first node called start
 		//storyrunner has the yarn data for the narrative 
 		//run() will start the yarn game at the name of the node given 
@@ -391,6 +337,65 @@ Play.prototype = {
 		
 		//pasting the text onto the screen 
 		game.add.text(175, 250, SigOtherText, text_style);
+		
+		
+		
+		//desk--------------------------------------------------------------------------------------------------------------
+		//the desk has a hole where the text will appear on the phone screen and behind the desk 
+		//The background desk for the game
+		//The rotation point has been placed in the center 
+		var desk = game.add.sprite(360, 480, 'deskHole');
+		desk.anchor.set(0.5);
+		
+		//Charger-------------------------------------------------------------------------------------------------------------
+		//the charger being added as a var in the game 
+		charger = game.add.sprite(game.width/2, 960, 'charger');
+		//set rotation point of charger to be at it's center 
+		charger.anchor.set(0.5);
+		//set scale for charger 
+		//charger.scale.setTo(0.75, 0.75);
+		
+		//enables input such as drag to be true on the charger so we can drag it with the mouse
+		charger.inputEnabled = true;
+		charger.input.enableDrag(true);
+		//enable body for the charger to use physics 
+		charger.enableBody = true;
+		game.physics.arcade.enable(charger);
+		//changes the hitbox(width, height, x, y) so that only the tip of the charger does anything when hit 
+		charger.body.setSize(26, 19, 18, 0);
+		
+		//animation for the charger wiggling out of the phone 
+		charger.animations.add('wiggle', [0,1,2,3], 4, true);
+		charger.frame = 5;
+		//charger.animations.add();
+		
+		
+		//PhoneFrame----------------------------------------------------------------------------------------------------
+		//goes on top of everything to cover any holes and have the text only look like it appears on the phone screen 
+		
+		phoneFramePlay = game.add.sprite(game.width/2, 400, 'phoneFrame');
+		phoneFramePlay.anchor.set(0.5);
+		phoneFramePlay.scale.setTo(1.35, 1.35);
+
+		//phone is given a body to interact with the charger's body and given physics as well
+		phoneFramePlay.enableBody = true;
+		game.physics.arcade.enable(phoneFramePlay);
+		
+		//battery life Timer-------------------------------------------------------------------------------------------
+		//battery percentage begins at random number
+		batteryPercentage = game.rnd.integerInRange(5, 10);
+		//create a basic custom timer for the batterylife
+		batteryTimer = game.time.create(false);
+		
+		//the loop to subtract one percent every few seconds 
+		batteryTimer.loop(3000, updateCounter, this);
+		//the integer is counting in thousands since it counts in milliseconds (i.e. 2000 is 2 seconds) 
+		//for the custom timer you must remember to start it on your own for it to work
+		batteryTimer.start();
+		
+		//add the battery life in as text 
+		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
+		
 		
 	},
 	
