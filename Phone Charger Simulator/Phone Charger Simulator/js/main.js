@@ -310,7 +310,7 @@ Play.prototype = {
 		//the rotation point is set to be the center of the phone so that the phone 
 		//can be conpletely in the center of the game screen 
 		
-		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
+		/*phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
 		phoneScreenPlay.anchor.set(0.5);
 		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
@@ -326,7 +326,7 @@ Play.prototype = {
 		//for the charging function of the game 
 		//phone.body.setSize(44, 50, 144, 512);
 		
-		
+	*/	
 		//battery life Timer-------------------------------------------------------------------------------------------
 		//battery percentage begins at random number
 		batteryPercentage = game.rnd.integerInRange(5, 10);
