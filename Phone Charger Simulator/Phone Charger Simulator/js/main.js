@@ -34,9 +34,7 @@ MainMenu.prototype = {
 		game.load.image('phoneFrame', 'assets/img/Phone_Frame.png');
 		game.load.image('phoneScreen', 'assets/img/Phone_Background.png');
 		game.load.image('desk', 'assets/img/Desk.png');
-		game.load.atlas('No_button', 'assets/img/No_Button.png', 'assets/img/No_Button.json');
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
-		game.load.atlas('Yes_button', 'assets/img/Yes_Button.png', 'assets/img/Yes_Button.json');
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
 		//music by PapaninKasettratat
 		game.load.audio('music', ['assets/music/Inspiration-pop-music.mp3', 'assets/music/Inspiration-pop-music.wav'] );
@@ -117,9 +115,9 @@ MainMenu.prototype = {
 		
 		
 		//play music background
-		music = game.add.audio('music', 0.5, true)
+		//music = game.add.audio('music', 0.5, true);
 		
-		game.sound.setDecodedCallback(music, start, this);
+		//game.sound.setDecodedCallback(music, start, this);
 		
 		
 	},
@@ -133,7 +131,7 @@ MainMenu.prototype = {
 }
 
 function start(){
-	music.play();
+	//music.play();
 }
 
 //global variable used only for Instructions state 
@@ -243,16 +241,9 @@ var keepChargerInPlaceX = 0;
 //dialogue variables 
 var dialogue;
 var result;
+var SigOtherText;
+var YourText;
 
-//testing objects 
-var no_button;
-var yes_button;
-var scoreText;
-var questions_Array;
-var question_text;
-var arrayPoint = 0;
-var button_press_count = 0;
-var button_bool = true;
 
 //use var GamePlay for the Play state
 var Play = function(game){
@@ -276,11 +267,12 @@ Play.prototype = {
 		game.camera.setPosition(0, 960);
 		//720 is the width of the game world not the canvas and 960 is the height 
 		//of the game world not the canvas 
-		
 		//game.width and game.height takes the size of the canvas not the world 
 		
 		//stop music 
-		music.stop();
+		//music.stop();
+		
+		
 		//where we create the background, platforms, player, baddies, and collectibles
 		game.stage.backgroundColor = "#4bb1b4";
 		//physics for the game using ARCADE Physics 
@@ -317,14 +309,15 @@ Play.prototype = {
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
 		//can be conpletely in the center of the game screen 
-		phoneFramePlay = game.add.sprite(game.width/2, 400, 'phoneFrame');
-		phoneFramePlay.anchor.set(0.5);
-		phoneFramePlay.scale.setTo(1.35, 1.35);
 		
 		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
 		phoneScreenPlay.anchor.set(0.5);
 		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
+		phoneFramePlay = game.add.sprite(game.width/2, 400, 'phoneFrame');
+		phoneFramePlay.anchor.set(0.5);
+		phoneFramePlay.scale.setTo(1.35, 1.35);
+
 		//phone is given a body to interact with the charger's body and given physics as well
 		phoneFramePlay.enableBody = true;
 		game.physics.arcade.enable(phoneFramePlay);
@@ -348,11 +341,8 @@ Play.prototype = {
 		
 		//add the battery life in as text 
 		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
-
-		//this is to help with testing------------------------------------------------------------------------------------------------------------
-		scoreText = game.add.text(10, game.height - 100, 'score: 0', {fontSize: '32px', fill: '#fff' });
 		
-		//dialogue beginning
+		//dialogue beginning----------------------------------------------------------------------------------------------
 		//so dialogue begins at the first node called start
 		//storyrunner has the yarn data for the narrative 
 		//run() will start the yarn game at the name of the node given 
@@ -361,9 +351,10 @@ Play.prototype = {
 		//result contains the first text that is in dialogue
 		//saying dialogue.next() again will give result the options under the text in an array 
 		result = dialogue.next();
-		
-		//array for random questions testing 
-		questions_Array = ['will you play?', 'are you sure?', 'can you hit the buttons?', 'how about now?', 'now?', 'I wonder how long you will last?', 'ready?', 'Go!'];
+		//so now result has the text dialogue from Yarn
+		//now result.value contains the text we need but it is an object 
+		//so before we can use the text we want to say result.value.text to get what we need 
+		SigOtherText = result.value.text;
 		
 		//function for the text wrap
 		function addText(x, y, text) {
@@ -372,6 +363,7 @@ Play.prototype = {
 				align: "center",
 				fontSize: 32
 			};	
+			//new way to add in text to use the text wrap function 
 			let new_text_element = game.add.text(x, y, text, textStyle);
 			this.text_elements.append(new_text_element);
 		}
@@ -386,40 +378,33 @@ Play.prototype = {
 			F: '#FFFFFF'
 		};
 		
-		//this allows us to change many things like the font or give the text the ability to wrap on its own 
+		//this allows us to change many things like the font or give the text the ability to wrap on its own
+		//this is also the style of font 
 		let text_style = {
 			font: 'Times New Roman',
 			fontSize: 32, 
 			fill: this.palette.F,
 			//added in to give word wrap to the text 
 			wordWrap: true,
-			wordWrapWidth: 250,
+			wordWrapWidth: 375,
 		};
 		
 		//pasting the text onto the screen 
-		question_text = game.add.text(175, 250, result, text_style);
-		//random buttons to test out multitasking for our players and dialogue choice 
-		no_button = game.add.button(game.width/2, 610, 'No_button', NoButton, this, 'No_Button2', 'No_Button1', 'No_Button3');
-		yes_button = game.add.button(game.width/2, 550, 'Yes_button', YesButton, this, 'Yes_Button2', 'Yes_Button1', 'Yes_Button3');
+		game.add.text(175, 250, SigOtherText, text_style);
 		
-		no_button.anchor.set(0.5);
-		yes_button.anchor.set(0.5);
 	},
 	
 	update: function(){
 		//camera controls with wasd keys
 		if(game.input.keyboard.isDown(Phaser.Keyboard.W) ){
-			game.camera.y -= 10;
+			game.camera.y -= 50;
 		}
 		if(game.input.keyboard.isDown(Phaser.Keyboard.S) ){
-			game.camera.y += 10;
+			game.camera.y += 50;
 		}
 		
 		//play an animation that show the charger may fall out of the phone 
 		var charging = game.physics.arcade.overlap(phoneFramePlay, charger, collisionHandler, null, this);
-		//scoreText.text = 'score: ' + button_press_count;
-		scoreText.text = 'score: ' + button_press_count;
-		question_text.text = questions_Array[arrayPoint];
 		//use if statement to decided when the charger will fall out of the phone
 		
 		//Charger is pluggedIn---------------------------------------------------------------------------------------------------------
@@ -452,15 +437,6 @@ Play.prototype = {
 			}
 			//pause the timer for the battery life
 			batteryTimer.pause();	
-			
-			//if charger is plugged in make buttons visible 
-			if(button_bool == false){
-				//decides whether the player can see the buttons or not 
-				yes_button.visible =! yes_button.visible;
-				no_button.visible =! no_button.visible;
-				//button boolean variable
-				button_bool = true;
-			}
 		}
 		
 		//keep charger in place 
@@ -482,14 +458,6 @@ Play.prototype = {
 			
 			//while the charger is not plugged in drain the battery life  
 			batteryTimer.resume();
-			//make the button invisible if charger is not plugged in(testing)
-			if(button_bool == true){
-				//decides whether the player can see the buttons or not 
-				yes_button.visible =! yes_button.visible;
-				no_button.visible =! no_button.visible;
-				//button boolean variable 
-				button_bool = false;
-			}
 		}
 		//other--------------------------------------------------------------------------------------------------------------
 		//update the text displayed for the battery life 
@@ -532,36 +500,8 @@ function collisionHandler(){
 	//console.log('wiggle');
 }
 
-//function NoButton 
-function NoButton(){
-	game.state.start('GameOver');
-}
 
-//function YesButton 
-function YesButton(){
-	//play audio 
-	game.sound.play('pop');
-	
-	//the buttons will move around at a certain point 
-	if(arrayPoint >= 2){
-		yes_button.x = game.rnd.integerInRange(0, game.width);
-		yes_button.y = game.rnd.integerInRange(0, game.height - 50);
-		
-		no_button.x = game.rnd.integerInRange(0, game.width);
-		no_button.y = game.rnd.integerInRange(0, game.height - 50);
-	}
-	
-	if(arrayPoint < 7){
-		//this statement will stop adding when the array reaches the end
-		arrayPoint += 1;
-	}
-	//an if statement to create a score for fun 
-	if(arrayPoint >= 7){
-		button_press_count += 25;
-	}
-	
-}
-
+//global variables used only for GameOver 
 var deskGameOver;
 //Use var GameOver for gameOver state 
 var GameOver = function(game){};
@@ -597,36 +537,18 @@ GameOver.prototype = {
 		retry = this.game.add.text(this.game.width/2, 200, text, style);
 		retry.anchor.set(0.5);
 		
-		//score (testing process)
-		text = scoreText.text;
-		style = {font: "32px", fill: "#fff", align: "center" };
-		var score = this.game.add.text(10, 25, text, style);
-		
 	},
 	
 	update: function(){
-		
-		//make the buttons invisible at the start if they lose when charger is pluggedIn 
-		//since when the charger is pluggedIn and they lose the buttons will become visible
-		//when they play again instead of refreshing the page.
-		if(button_bool == true){
-			yes_button.visible =! yes_button.visible;
-			no_button.visible =! no_button.visible;
-			//change the boolean so that update doesn't continuously activate the if statement 
-			button_bool = false;
-		}
 			
 		//change booleans back to original values 
 		pluggedIn = false;
 		bool = false;
 		timerBool = false;
-		button_press_count = 0;
-		arrayPoint = 0;
 		
 		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
 			//also a place where we can reset any values
-			button_bool = true;
 			
 			//changing the state must come last 
 			game.state.start('MainMenu');
