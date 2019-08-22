@@ -11,11 +11,15 @@
 "use strict";
 //the start of the game 
 var game = new Phaser.Game(720, 650, Phaser.AUTO);
+//a storyrunner for grabbing narrative text from our json file created by yarn
+//used for the narrative portion of the game.
 var storyrunner = new bondage.Runner();
 
 //properties for main menu 
+//global variables but not used in anywhere but MainMenu state 
 var start_button;
 var bgMain;
+//music is a global variable because we need to stop it from playing continuously in the Play state 
 var music;
 //use var Main Menu to create main menu 
 var MainMenu = function(game){};//---------------------------------------------------------------------
@@ -132,7 +136,7 @@ function start(){
 	music.play();
 }
 
-//variable for instructions 
+//global variable used only for Instructions state 
 var instruction_desk;
 
 //this will be used to instruct the player on how to play the game using text 
@@ -220,7 +224,7 @@ function startGame(){
 	game.state.start('Play');
 }
 
-//variables for the game 
+//global variables for the Play state 
 //booleans
 var pluggedIn = false; 
 var bool = false;
@@ -230,7 +234,6 @@ var phoneFramePlay;
 var phoneScreenPlay;
 var charger;
 
-var wiggle;
 var batteryTimer;
 var batteryPercentage;
 var batteryText;
@@ -276,12 +279,6 @@ Play.prototype = {
 		
 		//game.width and game.height takes the size of the canvas not the world 
 		
-		//dialogue beginning
-		//so dialogue begins at the first node called start
-		dialogue = storyrunner.run('Start');
-		//result contains the first text that is in dialogue
-		//saying dialogue.next() again will give result the options under the text in an array 
-		result = dialogue.next();
 		//stop music 
 		music.stop();
 		//where we create the background, platforms, player, baddies, and collectibles
@@ -355,6 +352,16 @@ Play.prototype = {
 		//this is to help with testing------------------------------------------------------------------------------------------------------------
 		scoreText = game.add.text(10, game.height - 100, 'score: 0', {fontSize: '32px', fill: '#fff' });
 		
+		//dialogue beginning
+		//so dialogue begins at the first node called start
+		//storyrunner has the yarn data for the narrative 
+		//run() will start the yarn game at the name of the node given 
+		dialogue = storyrunner.run('Start');
+		
+		//result contains the first text that is in dialogue
+		//saying dialogue.next() again will give result the options under the text in an array 
+		result = dialogue.next();
+		
 		//array for random questions testing 
 		questions_Array = ['will you play?', 'are you sure?', 'can you hit the buttons?', 'how about now?', 'now?', 'I wonder how long you will last?', 'ready?', 'Go!'];
 		
@@ -390,7 +397,7 @@ Play.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		question_text = game.add.text(175, 250, questions_Array[arrayPoint], text_style);
+		question_text = game.add.text(175, 250, result, text_style);
 		//random buttons to test out multitasking for our players and dialogue choice 
 		no_button = game.add.button(game.width/2, 610, 'No_button', NoButton, this, 'No_Button2', 'No_Button1', 'No_Button3');
 		yes_button = game.add.button(game.width/2, 550, 'Yes_button', YesButton, this, 'Yes_Button2', 'Yes_Button1', 'Yes_Button3');
