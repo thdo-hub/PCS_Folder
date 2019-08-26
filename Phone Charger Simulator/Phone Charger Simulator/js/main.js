@@ -35,6 +35,8 @@ MainMenu.prototype = {
 		game.load.image('desk', 'assets/img/Desk.png');
 		game.load.image('deskHole', 'assets/img/Desk_Hole.png');
 		game.load.image('phoneMainMenu', 'assets/img/menu.png');
+		game.load.image('wordBar', 'assets/img/Word_Bar.png');
+		game.load.image('textBar', 'assets/img/Text_Bar.png');
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
 		game.load.atlas('optionButton', 'assets/img/Options_Button.png', 'assets/img/Options_Button.json');
@@ -245,7 +247,21 @@ var otherTextGroup;
 var yourTextGroup;
 var optionButton1;
 var optionButton2;
+var nameText;
+var PlayStyle;
+var PlayTitle1;
+var PlayTitle2;
+var PlayTitle3;
+var PlayTitle4;
+//arrays
+var peopleArray;
+var pastTextsArray;
 
+//variables for the text appearing on screen 
+var box1;
+var box2;
+var box3;
+var box4;
 
 //use var GamePlay for the Play state
 var Play = function(game){
@@ -274,7 +290,10 @@ Play.prototype = {
 		//stop music from the menu from playing any further
 		music.stop();
 		
-		
+		//array for names 
+		peopleArray = ['Bae', 'Me'];
+		//array for the past text 
+		pastTextsArray = ["Where are you?", "Why aren't you picking up?", "Okay, ttyl"];
 		//where we create the background, platforms, player, baddies, and collectibles
 		game.stage.backgroundColor = "#4bb1b4";
 		//physics for the game using ARCADE Physics 
@@ -290,12 +309,23 @@ Play.prototype = {
 		phoneScreenPlay.anchor.set(0.5);
 		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
+		//art asset to make the phone look better
+		var wordBar = game.add.sprite(161, 545, 'wordBar');
+		wordBar = game.add.sprite(161, 47, 'wordBar');
+		var textGroup = game.add.group();
+		var textBar = textGroup.create(160, 420, 'textBar');
+		textBar = textGroup.create(160, 300, 'textBar');
+		textBar = textGroup.create(160, 180, 'textBar');
+		
 		//buttons so the player can progress throught the narrative------------------------------------------------------------
 		
-		//the button will be on top of the phone screen but behind everything else 
-		optionButton1 = game.add.button(160, 500, 'optionButton', choice1, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
-		optionButton2 = game.add.button(160, 560, 'optionButton', choice2, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
+		//the button will be on top of the phone screen but behind everything else //560
+		optionButton1 = game.add.button(160, 565, 'optionButton', choice1, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
+		optionButton2 = game.add.button(160, 625, 'optionButton', choice2, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
 		//Text-------------------------------------------------------------------------------------------------------------
+		//The texting style will resemble discord a lot but not really
+		
+		
 		//so dialogue begins at the first node called start
 		//storyrunner has the yarn data for the narrative 
 		//run() will start the yarn game at the name of the node given
@@ -308,7 +338,6 @@ Play.prototype = {
 		//so now result has the text dialogue from Yarn
 		//now result.value contains the text we need but it is an object 
 		//so before we can use the text we want to say result.value.text to get what we need 
-		otherTextGroup = game.add.group();
 		sigOtherText = result.value.text;
 		
 		//function for the text wrap
@@ -316,7 +345,7 @@ Play.prototype = {
 			let textStyle = {
 				font: "Zapfino, Verdana",
 				align: "center",
-				fontSize: 24
+				fontSize: 12
 			};	
 			//new way to add in text to use the text wrap function 
 			let new_text_element = game.add.text(x, y, text, textStyle);
@@ -337,7 +366,7 @@ Play.prototype = {
 		//this is also the style of font 
 		let text_style = {
 			font: 'Times New Roman',
-			fontSize: 32, 
+			fontSize: 18, 
 			fill: this.palette.F,
 			//added in to give word wrap to the text 
 			wordWrap: true,
@@ -345,7 +374,25 @@ Play.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		game.add.text(175, 250, sigOtherText, text_style);
+		
+		//this is for the username that people see on text 
+		
+		nameText = peopleArray[0];
+		PlayStyle = {font: "15px Arial", fill: "#fff", align: "center" };
+		PlayTitle1 = game.add.text(175, 432, nameText, PlayStyle);
+		
+		PlayTitle2 = game.add.text(175, 312, nameText, PlayStyle);
+		
+		PlayTitle3 = game.add.text(175, 192, nameText, PlayStyle);
+		
+		nameText = peopleArray[1];
+		PlayTitle4 = game.add.text(175, 72, nameText, PlayStyle);
+		//this will be where the text that have word wrap be located 
+		
+		box1 = game.add.text(175, 450, sigOtherText, text_style);
+		box2 = game.add.text(175, 330, pastTextsArray[1], text_style);
+		box3 = game.add.text(175, 210, pastTextsArray[0], text_style);
+		box4 = game.add.text(175, 90, pastTextsArray[2], text_style);
 		//look at the options given by having result go to the next dialogue in the Yarn node 
 		result = dialogue.next();
 		//now result has the options in an array result.value.options
@@ -354,8 +401,8 @@ Play.prototype = {
 		Option2 = result.value.options[1];
 		
 		//now paste the options on screen 
-		game.add.text(175, 500, Option1, text_style);
-		game.add.text(175, 560, Option2, text_style);
+		game.add.text(175, 565, Option1, text_style);
+		game.add.text(175, 625, Option2, text_style);
 		
 		//desk--------------------------------------------------------------------------------------------------------------
 		//the desk has a hole where the text will appear on the phone screen and behind the desk 
@@ -369,8 +416,6 @@ Play.prototype = {
 		charger = game.add.sprite(game.width/2, 960, 'charger');
 		//set rotation point of charger to be at it's center 
 		charger.anchor.set(0.5);
-		//set scale for charger 
-		//charger.scale.setTo(0.75, 0.75);
 		
 		//enables input such as drag to be true on the charger so we can drag it with the mouse
 		charger.inputEnabled = true;
@@ -384,7 +429,7 @@ Play.prototype = {
 		//animation for the charger wiggling out of the phone 
 		charger.animations.add('wiggle', [0,1,2,3], 4, true);
 		charger.frame = 5;
-		//charger.animations.add();
+		
 		
 		
 		//PhoneFrame----------------------------------------------------------------------------------------------------
@@ -411,7 +456,7 @@ Play.prototype = {
 		batteryTimer.start();
 		
 		//add the battery life in as text 
-		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
+		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '13px', fill: '#fff'});
 		
 		
 	},
@@ -419,10 +464,10 @@ Play.prototype = {
 	update: function(){
 		//camera controls with wasd keys
 		if(game.input.keyboard.isDown(Phaser.Keyboard.W) ){
-			game.camera.y -= 50;
+			game.camera.y -= 10;
 		}
 		if(game.input.keyboard.isDown(Phaser.Keyboard.S) ){
-			game.camera.y += 50;
+			game.camera.y += 10;
 		}
 		
 		//play an animation that show the charger may fall out of the phone 
