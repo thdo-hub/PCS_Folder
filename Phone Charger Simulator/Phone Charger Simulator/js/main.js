@@ -1,8 +1,8 @@
 //Phone Charger Simulator
 //Team 1%
-//Teresa
-//Preeti
-//Thomas
+//Teresa Chen
+//Preeti Mal
+//Thomas Do
 //github link: https://github.com/thdo-hub/PCS_Folder     
 // there is an ' _ ' between the PCS and Folder just so you know 
 
@@ -29,16 +29,17 @@ MainMenu.prototype = {
 	
 	preload: function(){
 		//preload assets for the game 
-		game.load.image('backgroundMain', 'assets/img/bg2.png');
 		game.load.spritesheet('charger', 'assets/img/Charger_Broken_Full.png', 64, 225);
 		game.load.image('phoneFrame', 'assets/img/Phone_Frame.png');
 		game.load.image('phoneScreen', 'assets/img/Phone_Background.png');
 		game.load.image('desk', 'assets/img/Desk.png');
 		game.load.image('deskHole', 'assets/img/Desk_Hole.png');
+		game.load.image('phoneMainMenu', 'assets/img/menu.png');
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
+		game.load.atlas('optionButton', 'assets/img/Options_Button.png', 'assets/img/Options_Button.json');
 		//music by PapaninKasettratat
-		game.load.audio('music', ['assets/music/Inspiration-pop-music.mp3', 'assets/music/Inspiration-pop-music.wav'] );
+		game.load.audio('music', 'assets/music/Menu_Music.mp3' );
 		//json file 
 		game.load.json('story', 'assets/json/phonestory.json');
 	},
@@ -54,15 +55,9 @@ MainMenu.prototype = {
 		//title 
 		bgMain = game.add.tileSprite(0, 0, 720, 960, 'desk');
 		
-		
-		
-		var phoneFrameMainMenu = game.add.sprite(game.width/2, 480, 'phoneFrame');
+		var phoneFrameMainMenu = game.add.sprite(game.width/2, 520, 'phoneMainMenu');
 		phoneFrameMainMenu.scale.setTo(1.35, 1.35);
 		phoneFrameMainMenu.anchor.set(0.5);
-		
-		var phoneScreenMainMenu = game.add.sprite(game.width/2 + 3, 447, 'phoneScreen');
-		phoneScreenMainMenu.scale.setTo(1.35, 1.35);
-		phoneScreenMainMenu.anchor.set(0.5);
 		//scale to fit background on screen 
 		//bgMain.scale.setTo(1, 1);
 		//game.stage.backgroundColor = "#4bb1b4";
@@ -91,7 +86,7 @@ MainMenu.prototype = {
 		//Title text 
 		var text = "Phone Charger Simulator";
 		var style = {font: "50px Arial", fill: "#fff", align: "center" };
-		var title = this.game.add.text(this.game.width/2, 400, text, style);
+		var title = this.game.add.text(this.game.width/2, 350, text, style);
 		title.anchor.set(0.5);
 		//other text 
 		this.story_text = "Keep Your Phone Charged While Texting Your Significant Other";
@@ -107,18 +102,18 @@ MainMenu.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		game.add.text(32, 550, this.story_text, text_style);
+		game.add.text(32, 500, this.story_text, text_style);
 		
 		//How to begin the game 
 		text = "Press SPACEBAR to go to instructions";
 		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var begin = this.game.add.text(32, 650, text, style);
+		var begin = this.game.add.text(32, 700, text, style);
 		
 		
 		//play music background
-		//music = game.add.audio('music', 0.5, true);
+		music = game.add.audio('music', 0.5, true);
 		
-		//game.sound.setDecodedCallback(music, start, this);
+		game.sound.setDecodedCallback(music, start, this);
 		
 		
 	},
@@ -132,7 +127,7 @@ MainMenu.prototype = {
 }
 
 function start(){
-	//music.play();
+	music.play();
 }
 
 //global variable used only for Instructions state 
@@ -242,8 +237,14 @@ var keepChargerInPlaceX = 0;
 //dialogue variables 
 var dialogue;
 var result;
-var SigOtherText;
-var YourText;
+var sigOtherText;
+var yourText;
+var Option1;
+var Option2;
+var otherTextGroup;
+var yourTextGroup;
+var optionButton1;
+var optionButton2;
 
 
 //use var GamePlay for the Play state
@@ -270,8 +271,8 @@ Play.prototype = {
 		//of the game world not the canvas 
 		//game.width and game.height takes the size of the canvas not the world 
 		
-		//stop music 
-		//music.stop();
+		//stop music from the menu from playing any further
+		music.stop();
 		
 		
 		//where we create the background, platforms, player, baddies, and collectibles
@@ -282,16 +283,23 @@ Play.prototype = {
 		//PhoneScreen------------------------------------------------------------------------------------------------------
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
-		//can be conpletely in the center of the game screen 
+		//can be completely in the center of the game screen 
+		//everything will be in front of the phone screen
 		
 		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
 		phoneScreenPlay.anchor.set(0.5);
 		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
+		//buttons so the player can progress throught the narrative------------------------------------------------------------
+		
+		//the button will be on top of the phone screen but behind everything else 
+		optionButton1 = game.add.button(160, 500, 'optionButton', choice1, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
+		optionButton2 = game.add.button(160, 560, 'optionButton', choice2, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
 		//Text-------------------------------------------------------------------------------------------------------------
 		//so dialogue begins at the first node called start
 		//storyrunner has the yarn data for the narrative 
-		//run() will start the yarn game at the name of the node given 
+		//run() will start the yarn game at the name of the node given
+		//the text will appear in front of the phone screen but be heind everything else, to look more like messaging on a phone 
 		dialogue = storyrunner.run('Start');
 		
 		//result contains the first text that is in dialogue
@@ -300,14 +308,15 @@ Play.prototype = {
 		//so now result has the text dialogue from Yarn
 		//now result.value contains the text we need but it is an object 
 		//so before we can use the text we want to say result.value.text to get what we need 
-		SigOtherText = result.value.text;
+		otherTextGroup = game.add.group();
+		sigOtherText = result.value.text;
 		
 		//function for the text wrap
 		function addText(x, y, text) {
 			let textStyle = {
 				font: "Zapfino, Verdana",
 				align: "center",
-				fontSize: 32
+				fontSize: 24
 			};	
 			//new way to add in text to use the text wrap function 
 			let new_text_element = game.add.text(x, y, text, textStyle);
@@ -336,9 +345,17 @@ Play.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		game.add.text(175, 250, SigOtherText, text_style);
+		game.add.text(175, 250, sigOtherText, text_style);
+		//look at the options given by having result go to the next dialogue in the Yarn node 
+		result = dialogue.next();
+		//now result has the options in an array result.value.options
+		//put the options available in the global variables for the options 
+		Option1 = result.value.options[0];
+		Option2 = result.value.options[1];
 		
-		
+		//now paste the options on screen 
+		game.add.text(175, 500, Option1, text_style);
+		game.add.text(175, 560, Option2, text_style);
 		
 		//desk--------------------------------------------------------------------------------------------------------------
 		//the desk has a hole where the text will appear on the phone screen and behind the desk 
@@ -505,6 +522,19 @@ function collisionHandler(){
 	//console.log('wiggle');
 }
 
+//choice1
+function choice1(){
+	//what happens when player chooses first choice
+	
+	//play text sound effect
+	
+}
+
+function choice2(){
+	//what happens when player chooses second choice 
+	
+	//play text sound effect 
+}
 
 //global variables used only for GameOver 
 var deskGameOver;
