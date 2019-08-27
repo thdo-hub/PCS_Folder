@@ -1,8 +1,8 @@
 //Phone Charger Simulator
 //Team 1%
-//Teresa
-//Preeti
-//Thomas
+//Teresa Chen
+//Preeti Mal
+//Thomas Do
 //github link: https://github.com/thdo-hub/PCS_Folder     
 // there is an ' _ ' between the PCS and Folder just so you know 
 
@@ -11,10 +11,15 @@
 "use strict";
 //the start of the game 
 var game = new Phaser.Game(720, 650, Phaser.AUTO);
+//a storyrunner for grabbing narrative text from our json file created by yarn
+//used for the narrative portion of the game.
+var storyrunner = new bondage.Runner();
 
 //properties for main menu 
+//global variables but not used in anywhere but MainMenu state 
 var start_button;
 var bgMain;
+//music is a global variable because we need to stop it from playing continuously in the Play state 
 var music;
 //use var Main Menu to create main menu 
 var MainMenu = function(game){};//---------------------------------------------------------------------
@@ -24,17 +29,21 @@ MainMenu.prototype = {
 	
 	preload: function(){
 		//preload assets for the game 
-		game.load.image('backgroundMain', 'assets/img/bg2.png');
 		game.load.spritesheet('charger', 'assets/img/Charger_Broken_Full.png', 64, 225);
 		game.load.image('phoneFrame', 'assets/img/Phone_Frame.png');
 		game.load.image('phoneScreen', 'assets/img/Phone_Background.png');
 		game.load.image('desk', 'assets/img/Desk.png');
-		game.load.atlas('No_button', 'assets/img/No_Button.png', 'assets/img/No_Button.json');
+		game.load.image('deskHole', 'assets/img/Desk_Hole.png');
+		game.load.image('phoneMainMenu', 'assets/img/menu.png');
+		game.load.image('wordBar', 'assets/img/Word_Bar.png');
+		game.load.image('textBar', 'assets/img/Text_Bar.png');
 		game.load.atlas('Start_button', 'assets/img/Start_Button.png', 'assets/img/Start_Button.json');
-		game.load.atlas('Yes_button', 'assets/img/Yes_Button.png', 'assets/img/Yes_Button.json');
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
+		game.load.atlas('optionButton', 'assets/img/Options_Button.png', 'assets/img/Options_Button.json');
 		//music by PapaninKasettratat
-		game.load.audio('music', ['assets/music/Inspiration-pop-music.mp3', 'assets/music/Inspiration-pop-music.wav'] );
+		game.load.audio('music', 'assets/music/Menu_Music.mp3' );
+		//json file 
+		game.load.json('story', 'assets/json/phonestory.json');
 	},
 	
 	create: function(){
@@ -42,18 +51,15 @@ MainMenu.prototype = {
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 800);
 		
+		//loading storyrunner into phaser
+		storyrunner.load(game.cache.getJSON('story'));
+		
 		//title 
 		bgMain = game.add.tileSprite(0, 0, 720, 960, 'desk');
 		
-		
-		
-		var phoneFrameMainMenu = game.add.sprite(game.width/2, 480, 'phoneFrame');
+		var phoneFrameMainMenu = game.add.sprite(game.width/2, 520, 'phoneMainMenu');
 		phoneFrameMainMenu.scale.setTo(1.35, 1.35);
 		phoneFrameMainMenu.anchor.set(0.5);
-		
-		var phoneScreenMainMenu = game.add.sprite(game.width/2 + 3, 447, 'phoneScreen');
-		phoneScreenMainMenu.scale.setTo(1.35, 1.35);
-		phoneScreenMainMenu.anchor.set(0.5);
 		//scale to fit background on screen 
 		//bgMain.scale.setTo(1, 1);
 		//game.stage.backgroundColor = "#4bb1b4";
@@ -82,7 +88,7 @@ MainMenu.prototype = {
 		//Title text 
 		var text = "Phone Charger Simulator";
 		var style = {font: "50px Arial", fill: "#fff", align: "center" };
-		var title = this.game.add.text(this.game.width/2, 400, text, style);
+		var title = this.game.add.text(this.game.width/2, 350, text, style);
 		title.anchor.set(0.5);
 		//other text 
 		this.story_text = "Keep Your Phone Charged While Texting Your Significant Other";
@@ -98,16 +104,16 @@ MainMenu.prototype = {
 		};
 		
 		//pasting the text onto the screen 
-		game.add.text(32, 550, this.story_text, text_style);
+		game.add.text(32, 500, this.story_text, text_style);
 		
 		//How to begin the game 
 		text = "Press SPACEBAR to go to instructions";
 		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var begin = this.game.add.text(32, 650, text, style);
+		var begin = this.game.add.text(32, 700, text, style);
 		
 		
 		//play music background
-		music = game.add.audio('music', 0.5, true)
+		music = game.add.audio('music', 0.5, true);
 		
 		game.sound.setDecodedCallback(music, start, this);
 		
@@ -126,7 +132,7 @@ function start(){
 	music.play();
 }
 
-//variable for instructions 
+//global variable used only for Instructions state 
 var instruction_desk;
 
 //this will be used to instruct the player on how to play the game using text 
@@ -166,7 +172,7 @@ Instructions.prototype = {
 			F: '#FFFFFF'
 		};
 		
-		this.story_text = "Keep Your Phone Charged While answering questions";
+		this.story_text = "Welcome to Phone Charger Simulator";
 		
 		//this allows us to change many things like the font or give the text the ability to wrap on its own 
 		let text_style = {
@@ -181,23 +187,20 @@ Instructions.prototype = {
 		//pasting the text onto the screen 
 		game.add.text(32, 350, this.story_text, text_style);
 		
-		this.story_text = "This is only a playtest for the multitasking portion of the game";
-		game.add.text(32, 425, this.story_text, text_style);
+		this.story_text = "Keep Your Phone Charged While answering questions";
+		game.add.text(32, 400, this.story_text, text_style);
 		
-		this.story_text = "The narrative of the game is being written in twine";
-		game.add.text(32, 500, this.story_text, text_style);
-		
-		this.story_text = "click on start to begin the game";
-		game.add.text(32, 575, this.story_text, text_style);
+		this.story_text = "Click on the options at the bottom of the phone to deceive your significant other";
+		game.add.text(32, 475, this.story_text, text_style);
 		
 		this.story_text = "Use the mouse to click and drag the charger and press the buttons";
-		game.add.text(32, 625, this.story_text, text_style);
-		
-		this.story_text = "The charger must be plugged in to press the buttons";
-		game.add.text(32, 700, this.story_text, text_style);
+		game.add.text(32, 550, this.story_text, text_style);
 		
 		this.story_text = "Use W to move camera up and S to move camera down";
-		game.add.text(32, 775, this.story_text, text_style);
+		game.add.text(32, 625, this.story_text, text_style);
+		
+		this.story_text = "Click on start to begin the game";
+		game.add.text(32, 700, this.story_text, text_style);
 		
 		start_button = game.add.button(game.width/2, 850, 'Start_button', startGame, this, 'START_Button1', 'START_Button2');
 		start_button.anchor.set(0.5);
@@ -214,7 +217,7 @@ function startGame(){
 	game.state.start('Play');
 }
 
-//variables for the game 
+//global variables for the Play state 
 //booleans
 var pluggedIn = false; 
 var bool = false;
@@ -224,22 +227,38 @@ var phoneFramePlay;
 var phoneScreenPlay;
 var charger;
 
-var wiggle;
 var batteryTimer;
 var batteryPercentage;
 var batteryText;
 var keepChargerInPlaceY = 0;
 var keepChargerInPlaceX = 0;
 
-//testing objects 
-var no_button;
-var yes_button;
-var scoreText;
-var questions_Array;
-var question_text;
-var arrayPoint = 0;
-var button_press_count = 0;
-var button_bool = true;
+//dialogue variables 
+var dialogue;
+var result;
+var sigOtherText;
+var yourText;
+var Option1;
+var Option2;
+var optionButton1;
+var optionButton2;
+
+//arrays
+var peopleArray;
+var pastTextsArray;
+
+//variables for the text appearing on screen 
+var box1;
+var box2;
+var box3;
+var box4;
+var nameText;
+var PlayStyle;
+var PlayTitle1;
+var PlayTitle2;
+var PlayTitle3;
+var PlayTitle4;
+var SigOtherReplay;
 
 //use var GamePlay for the Play state
 var Play = function(game){
@@ -263,92 +282,68 @@ Play.prototype = {
 		game.camera.setPosition(0, 960);
 		//720 is the width of the game world not the canvas and 960 is the height 
 		//of the game world not the canvas 
-		
 		//game.width and game.height takes the size of the canvas not the world 
 		
-		//stop music 
+		//stop music from the menu from playing any further
 		music.stop();
+		
+		//array for names 
+		peopleArray = ['Bae', 'Me', 'Bae is texting...'];
+		//array for the past text 
+		pastTextsArray = ["Where are you?", "Why aren't you picking up?", "Okay, ttyl"];
 		//where we create the background, platforms, player, baddies, and collectibles
 		game.stage.backgroundColor = "#4bb1b4";
 		//physics for the game using ARCADE Physics 
 		game.physics.startSystem(Phaser.Physics.ARCADE);
-
-		//The background desk for the game
-		//The ratation point has been placed in the center 
-		var desk = game.add.sprite(360, 480, 'desk');
-		desk.anchor.set(0.5);
 		
-		//Charger-----------------------------------------------------------------------------------------------------
-		//the charger being added as a var in the game 
-		charger = game.add.sprite(game.width/2, 960, 'charger');
-		//set rotation point of charger to be at it's center 
-		charger.anchor.set(0.5);
-		//set scale for charger 
-		//charger.scale.setTo(0.75, 0.75);
-		
-		//enables input such as drag to be true on the charger so we can drag it with the mouse
-		charger.inputEnabled = true;
-		charger.input.enableDrag(true);
-		//enable body for the charger to use physics 
-		charger.enableBody = true;
-		game.physics.arcade.enable(charger);
-		//changes the hitbox(width, height, x, y) so that only the tip of the charger does anything when hit 
-		charger.body.setSize(26, 19, 18, 0);
-		
-		//animation for the charger wiggling out of the phone 
-		charger.animations.add('wiggle', [0,1,2,3], 4, true);
-		charger.frame = 5;
-		//charger.animations.add();
-		
-		//Phone------------------------------------------------------------------------------------------------------
+		//PhoneScreen------------------------------------------------------------------------------------------------------
 		//for phone image 
 		//the rotation point is set to be the center of the phone so that the phone 
-		//can be conpletely in the center of the game screen 
-		phoneFramePlay = game.add.sprite(game.width/2, 400, 'phoneFrame');
-		phoneFramePlay.anchor.set(0.5);
-		phoneFramePlay.scale.setTo(1.35, 1.35);
+		//can be completely in the center of the game screen 
+		//everything will be in front of the phone screen
 		
-		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 367, 'phoneScreen');
+		phoneScreenPlay = game.add.sprite(game.width/2 + 3, 366, 'phoneScreen');
 		phoneScreenPlay.anchor.set(0.5);
 		phoneScreenPlay.scale.setTo(1.35, 1.35);
 		
-		//phone is given a body to interact with the charger's body and given physics as well
-		phoneFramePlay.enableBody = true;
-		game.physics.arcade.enable(phoneFramePlay);
+		//art asset to make the phone look better
+		var wordBar = game.add.sprite(161, 545, 'wordBar');
+		var textGroup = game.add.group();
+		var textBar = textGroup.create(160, 420, 'textBar');
+		textBar = textGroup.create(160, 300, 'textBar');
+		textBar = textGroup.create(160, 180, 'textBar');
 		
-		//changes the hitbox(width, height, x, y) so that only a small part of the phone can interact with the charger 
-		//for the charging function of the game 
-		//phone.body.setSize(44, 50, 144, 512);
+		//buttons so the player can progress throught the narrative------------------------------------------------------------
+		
+		//the button will be on top of the phone screen but behind everything else //560
+		optionButton1 = game.add.button(160, 565, 'optionButton', choice1, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
+		optionButton2 = game.add.button(160, 625, 'optionButton', choice2, this, 'Options_Button2', 'Options_Button1', 'Options_Button3');
+		//Text-------------------------------------------------------------------------------------------------------------
+		//The texting style will resemble discord a lot but not really
 		
 		
-		//battery life Timer-------------------------------------------------------------------------------------------
-		//battery percentage begins at random number
-		batteryPercentage = game.rnd.integerInRange(5, 10);
-		//create a basic custom timer for the batterylife
-		batteryTimer = game.time.create(false);
+		//so dialogue begins at the first node called start
+		//storyrunner has the yarn data for the narrative 
+		//run() will start the yarn game at the name of the node given
+		//the text will appear in front of the phone screen but be heind everything else, to look more like messaging on a phone 
+		dialogue = storyrunner.run('Start');
 		
-		//the loop to subtract one percent every few seconds 
-		batteryTimer.loop(3000, updateCounter, this);
-		//the integer is counting in thousands since it counts in milliseconds (i.e. 2000 is 2 seconds) 
-		//for the custom timer you must remember to start it on your own for it to work
-		batteryTimer.start();
-		
-		//add the battery life in as text 
-		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '32px', fill: '#000'});
-
-		//this is to help with testing------------------------------------------------------------------------------------------------------------
-		scoreText = game.add.text(10, game.height - 100, 'score: 0', {fontSize: '32px', fill: '#fff' });
-		
-		//array for random questions testing 
-		questions_Array = ['will you play?', 'are you sure?', 'can you hit the buttons?', 'how about now?', 'now?', 'I wonder how long you will last?', 'ready?', 'Go!'];
+		//result contains the first text that is in dialogue
+		//saying dialogue.next() again will give result the options under the text in an array 
+		result = dialogue.next();
+		//so now result has the text dialogue from Yarn
+		//now result.value contains the text we need but it is an object 
+		//so before we can use the text we want to say result.value.text to get what we need 
+		sigOtherText = result.value.text;
 		
 		//function for the text wrap
 		function addText(x, y, text) {
 			let textStyle = {
 				font: "Zapfino, Verdana",
 				align: "center",
-				fontSize: 32
+				fontSize: 12
 			};	
+			//new way to add in text to use the text wrap function 
 			let new_text_element = game.add.text(x, y, text, textStyle);
 			this.text_elements.append(new_text_element);
 		}
@@ -363,25 +358,111 @@ Play.prototype = {
 			F: '#FFFFFF'
 		};
 		
-		//this allows us to change many things like the font or give the text the ability to wrap on its own 
+		//this allows us to change many things like the font or give the text the ability to wrap on its own
+		//this is also the style of font 
 		let text_style = {
 			font: 'Times New Roman',
-			fontSize: 32, 
+			fontSize: 18, 
 			fill: this.palette.F,
 			//added in to give word wrap to the text 
 			wordWrap: true,
-			wordWrapWidth: 250,
+			wordWrapWidth: 375,
 		};
 		
 		//pasting the text onto the screen 
-		question_text = game.add.text(175, 250, questions_Array[arrayPoint], text_style);
-		//random buttons to test out multitasking for our players and dialogue choice 
-		no_button = game.add.button(game.width/2, 610, 'No_button', NoButton, this, 'No_Button2', 'No_Button1', 'No_Button3');
-		yes_button = game.add.button(game.width/2, 550, 'Yes_button', YesButton, this, 'Yes_Button2', 'Yes_Button1', 'Yes_Button3');
 		
-		no_button.anchor.set(0.5);
-		yes_button.anchor.set(0.5);
+		//this is for the username that people see on text 
+		
+		nameText = peopleArray[0];
+		PlayStyle = {font: "15px Arial", fill: "#fff", align: "center" };
+		PlayTitle1 = game.add.text(175, 420, nameText, PlayStyle);
+		
+		PlayTitle2 = game.add.text(175, 300, nameText, PlayStyle);
+		
+		PlayTitle3 = game.add.text(175, 180, nameText, PlayStyle);
+		
+		nameText = peopleArray[1];
+		PlayTitle4 = game.add.text(175, 60, nameText, PlayStyle);
+		
+		//this text is to indicate to the player that they have to wait before selecting options again 
+		nameText = peopleArray[2];
+		PlayStyle = {font: "12px Arial", fill: "#fff", align: "center"};
+		SigOtherReplay = game.add.text(175, 545, nameText, PlayStyle);
+		//It stays invisible until a choice is selected 
+		SigOtherReplay.visible =! SigOtherReplay.visible;
+		//this will be where the text that have word wrap be located 
+		
+		box1 = game.add.text(175, 440, sigOtherText, text_style);
+		box2 = game.add.text(175, 320, pastTextsArray[1], text_style);
+		box3 = game.add.text(175, 200, pastTextsArray[0], text_style);
+		box4 = game.add.text(175, 80, pastTextsArray[2], text_style);
+		//look at the options given by having result go to the next dialogue in the Yarn node 
+		result = dialogue.next();
+		//now result has the options in an array result.value.options
+		//put the options available in the global variables for the options
+		Option1 = game.add.text(175, 565, result.value.options[0], text_style);
+		Option2 = game.add.text(175, 625, result.value.options[1], text_style);
+		
+		//the bar up top that needs to be on top of the text 
+		wordBar = game.add.sprite(161, 47, 'wordBar');
+		//desk--------------------------------------------------------------------------------------------------------------
+		//the desk has a hole where the text will appear on the phone screen and behind the desk 
+		//The background desk for the game
+		//The rotation point has been placed in the center 
+		var desk = game.add.sprite(360, 480, 'deskHole');
+		desk.anchor.set(0.5);
+		
+		//Charger-------------------------------------------------------------------------------------------------------------
+		//the charger being added as a var in the game 
+		charger = game.add.sprite(game.width/2, 960, 'charger');
+		//set rotation point of charger to be at it's center 
+		charger.anchor.set(0.5);
+		
+		//enables input such as drag to be true on the charger so we can drag it with the mouse
+		charger.inputEnabled = true;
+		charger.input.enableDrag(true);
+		//enable body for the charger to use physics 
+		charger.enableBody = true;
+		game.physics.arcade.enable(charger);
+		//changes the hitbox(width, height, x, y) so that only the tip of the charger does anything when hit 
+		charger.body.setSize(26, 19, 18, 0);
+		
+		//animation for the charger wiggling out of the phone 
+		charger.animations.add('wiggle', [0,1,2,3], 4, true);
+		charger.frame = 5;
+		
+		
+		
+		//PhoneFrame----------------------------------------------------------------------------------------------------
+		//goes on top of everything to cover any holes and have the text only look like it appears on the phone screen 
+		
+		phoneFramePlay = game.add.sprite(game.width/2, 400, 'phoneFrame');
+		phoneFramePlay.anchor.set(0.5);
+		phoneFramePlay.scale.setTo(1.35, 1.35);
+
+		//phone is given a body to interact with the charger's body and given physics as well
+		phoneFramePlay.enableBody = true;
+		game.physics.arcade.enable(phoneFramePlay);
+		
+		//battery life Timer-------------------------------------------------------------------------------------------
+		//battery percentage begins at random number
+		batteryPercentage = game.rnd.integerInRange(5, 10);
+		//create a basic custom timer for the batterylife
+		batteryTimer = game.time.create(false);
+		
+		//the loop to subtract one percent every few seconds 
+		batteryTimer.loop(3000, updateCounter, this);
+		//the integer is counting in thousands since it counts in milliseconds (i.e. 2000 is 2 seconds) 
+		//for the custom timer you must remember to start it on your own for it to work
+		batteryTimer.start();
+		
+		//add the battery life in as text 
+		batteryText = game.add.text(500, 50, batteryPercentage + '%', {fontSize: '13px', fill: '#fff'});
+		
+		
 	},
+	//end of Play state create function()
+	
 	
 	update: function(){
 		//camera controls with wasd keys
@@ -394,9 +475,6 @@ Play.prototype = {
 		
 		//play an animation that show the charger may fall out of the phone 
 		var charging = game.physics.arcade.overlap(phoneFramePlay, charger, collisionHandler, null, this);
-		//scoreText.text = 'score: ' + button_press_count;
-		scoreText.text = 'score: ' + button_press_count;
-		question_text.text = questions_Array[arrayPoint];
 		//use if statement to decided when the charger will fall out of the phone
 		
 		//Charger is pluggedIn---------------------------------------------------------------------------------------------------------
@@ -429,15 +507,6 @@ Play.prototype = {
 			}
 			//pause the timer for the battery life
 			batteryTimer.pause();	
-			
-			//if charger is plugged in make buttons visible 
-			if(button_bool == false){
-				//decides whether the player can see the buttons or not 
-				yes_button.visible =! yes_button.visible;
-				no_button.visible =! no_button.visible;
-				//button boolean variable
-				button_bool = true;
-			}
 		}
 		
 		//keep charger in place 
@@ -459,14 +528,6 @@ Play.prototype = {
 			
 			//while the charger is not plugged in drain the battery life  
 			batteryTimer.resume();
-			//make the button invisible if charger is not plugged in(testing)
-			if(button_bool == true){
-				//decides whether the player can see the buttons or not 
-				yes_button.visible =! yes_button.visible;
-				no_button.visible =! no_button.visible;
-				//button boolean variable 
-				button_bool = false;
-			}
 		}
 		//other--------------------------------------------------------------------------------------------------------------
 		//update the text displayed for the battery life 
@@ -476,7 +537,11 @@ Play.prototype = {
 			game.state.start('GameOver');
 		}
 		
-	}
+		//this is to help with the changing dialogue 
+		
+	}//end of Play state update function()
+	
+	
 }
 
 //function fallingCharger 
@@ -509,36 +574,134 @@ function collisionHandler(){
 	//console.log('wiggle');
 }
 
-//function NoButton 
-function NoButton(){
-	game.state.start('GameOver');
+//choice1
+function choice1(){
+	//what happens when player chooses first choice
+	//move text up 
+	PlayTitle4.text = PlayTitle3.text;
+	PlayTitle3.text = PlayTitle2.text;
+	PlayTitle2.text = PlayTitle1.text;
+	
+	box4.text = box3.text;
+	box3.text = box2.text;
+	box2.text = box1.text;
+	
+	//now for the responce 
+	PlayTitle1.text = peopleArray[1];
+	box1.text = result.value.options[0];
+	//since the player chooses option 1
+	//select the first element in the array result.value.options[]
+	
+	result.value.select(0);
+	result = dialogue.next();
+	
+	//change the options to blank so the player won't choose one right away
+	Option1.text = " ";
+	Option2.text = " ";
+	
+	//play waiting for text from Significant Other animation here
+	//before game.time.events.add() so that it stop playing at the end 
+	//the text is invisible until here 
+	SigOtherReplay.visible =! SigOtherReplay.visible;
+	//make the buttons invisible to so they don't press them 
+	optionButton1.visible =! optionButton1.visible;
+	optionButton2.visible =! optionButton2.visible;
+	
+	//allow a few seconds to be wasted like in real life 
+	game.time.events.add(Phaser.Timer.SECOND*3, SigOtherText, this);
+	//play text sound effect
+	
 }
 
-//function YesButton 
-function YesButton(){
-	//play audio 
-	game.sound.play('pop');
+function choice2(){
+	//what happens when player chooses second choice 
+	//move text up 
+	PlayTitle4.text = PlayTitle3.text;
+	PlayTitle3.text = PlayTitle2.text;
+	PlayTitle2.text = PlayTitle1.text;
 	
-	//the buttons will move around at a certain point 
-	if(arrayPoint >= 2){
-		yes_button.x = game.rnd.integerInRange(0, game.width);
-		yes_button.y = game.rnd.integerInRange(0, game.height - 50);
+	box4.text = box3.text;
+	box3.text = box2.text;
+	box2.text = box1.text;
+	
+	//now for the responce 
+	PlayTitle1.text = peopleArray[1];
+	box1.text = result.value.options[1];
+	//since the player chooses option 2
+	//select the second element in the array result.value.options[]
+	
+	result.value.select(1);
+	result = dialogue.next();
+	
+	//change the options to blank so the player won't choose one right away
+	Option1.text = " ";
+	Option2.text = " ";
+	
+	//play waiting for text from Significant Other animation here
+	//before game.time.events.add() so that it stop playing at the end 
+	//the text is invisible until here 
+	SigOtherReplay.visible =! SigOtherReplay.visible;
+	//make the buttons invisible to so they don't press them 
+	optionButton1.visible =! optionButton1.visible;
+	optionButton2.visible =! optionButton2.visible;
+	
+	//allow a few seconds to be wasted like in real life 
+	game.time.events.add(Phaser.Timer.SECOND*3, SigOtherText, this);
+	//play text sound effect
+}
+
+//function SigOtherText
+function SigOtherText(){
+	//the significant other text 
+	//move text up 
+	PlayTitle4.text = PlayTitle3.text;
+	PlayTitle3.text = PlayTitle2.text;
+	PlayTitle2.text = PlayTitle1.text;
+	
+	box4.text = box3.text;
+	box3.text = box2.text;
+	box2.text = box1.text;
+	
+	//now for the responce 
+	PlayTitle1.text = peopleArray[0];
+	box1.text = result.value.text;
+	//box1.text is a text value instead of an options value because it is from the significant other side 
+	result = dialogue.next();
+	
+	//first check to see if result.done == true 
+	if(result.done == true){
+		game.state.start('GameOver');
 		
-		no_button.x = game.rnd.integerInRange(0, game.width);
-		no_button.y = game.rnd.integerInRange(0, game.height - 50);
+	}else if(result.value.text == "You have been blocked"){
+		//if You got Blocked
+		//you can use text as a boolean to say that if the text is like this then do that
+		//this needs to be done because the narrative doesn't go through all the way for 
+		//result.done to be true on some of the branches
+	
+		result = dialogue.next();
 	}
 	
-	if(arrayPoint < 7){
-		//this statement will stop adding when the array reaches the end
-		arrayPoint += 1;
-	}
-	//an if statement to create a score for fun 
-	if(arrayPoint >= 7){
-		button_press_count += 25;
-	}
-	
-}
 
+	
+	//second check to see if result.done == true 
+	//so if we reach the end of the narrative then go to game over screen 
+	if(result.done == true){
+		game.state.start('GameOver');
+	}else{
+		//Now give the options boxes the different text 
+		Option1.text = result.value.options[0];
+		Option2.text = result.value.options[1];
+	}
+	//so the reason we go through with this is to make sure we can end properly
+	
+	
+	//make this invisible again 
+	SigOtherReplay.visible =! SigOtherReplay.visible;
+	//make the buttons visible again so they can press them  
+	optionButton1.visible =! optionButton1.visible;
+	optionButton2.visible =! optionButton2.visible;
+}
+//global variables used only for GameOver 
 var deskGameOver;
 //Use var GameOver for gameOver state 
 var GameOver = function(game){};
@@ -574,38 +737,17 @@ GameOver.prototype = {
 		retry = this.game.add.text(this.game.width/2, 200, text, style);
 		retry.anchor.set(0.5);
 		
-		//score (testing process)
-		text = scoreText.text;
-		style = {font: "32px", fill: "#fff", align: "center" };
-		var score = this.game.add.text(10, 25, text, style);
-		
 	},
 	
 	update: function(){
-		
-		//make the buttons invisible at the start if they lose when charger is pluggedIn 
-		//since when the charger is pluggedIn and they lose the buttons will become visible
-		//when they play again instead of refreshing the page.
-		if(button_bool == true){
-			yes_button.visible =! yes_button.visible;
-			no_button.visible =! no_button.visible;
-			//change the boolean so that update doesn't continuously activate the if statement 
-			button_bool = false;
-		}
 			
+		//change booleans back to original values 
+		pluggedIn = false;
+		bool = false;
+		timerBool = false;
+		
 		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			//also a place where we can reset any values
-			button_press_count = 0;
-			arrayPoint = 0;
-			
-			
-			//change booleans back to original values 
-			pluggedIn = false;
-			bool = false;
-			button_bool = true;
-			timerBool = false;
-			
 			//changing the state must come last 
 			game.state.start('MainMenu');
 		}
@@ -619,5 +761,3 @@ game.state.add('Play', Play);
 game.state.add('GameOver', GameOver);
 game.state.add('Instructions', Instructions);
 game.state.start('MainMenu');
-
-
