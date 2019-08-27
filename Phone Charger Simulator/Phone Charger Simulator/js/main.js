@@ -676,7 +676,7 @@ function SigOtherText(){
 		//if You got Blocked
 		//you can use text as a boolean to say that if the text is like this then do that
 		//this needs to be done because the narrative doesn't go through all the way for 
-		//result.done to be true on some of the branches
+		//result.done to be true on some of the branches taken
 	
 		result = dialogue.next();
 	}
