@@ -42,6 +42,7 @@ MainMenu.prototype = {
 		game.load.atlas('optionButton', 'assets/img/Options_Button.png', 'assets/img/Options_Button.json');
 		//music by PapaninKasettratat
 		game.load.audio('music', 'assets/music/Menu_Music.mp3' );
+		game.load.audio('playMusic', 'assets/music/Background_Music.mp3' );
 		//json file 
 		game.load.json('story', 'assets/json/phonestory.json');
 	},
@@ -232,7 +233,7 @@ var batteryPercentage;
 var batteryText;
 var keepChargerInPlaceY = 0;
 var keepChargerInPlaceX = 0;
-
+var backgroundMusic;
 //dialogue variables 
 var dialogue;
 var result;
@@ -286,7 +287,11 @@ Play.prototype = {
 		
 		//stop music from the menu from playing any further
 		music.stop();
+		//start music for play state 
+		//play music background
+		backgroundMusic = game.add.audio('playMusic', 0.5, true);
 		
+		backgroundMusic.play();
 		//array for names 
 		peopleArray = ['Bae', 'Me', 'Bae is texting...'];
 		//array for the past text 
@@ -446,12 +451,12 @@ Play.prototype = {
 		
 		//battery life Timer-------------------------------------------------------------------------------------------
 		//battery percentage begins at random number
-		batteryPercentage = game.rnd.integerInRange(5, 10);
+		batteryPercentage = 10;
 		//create a basic custom timer for the batterylife
 		batteryTimer = game.time.create(false);
 		
 		//the loop to subtract one percent every few seconds 
-		batteryTimer.loop(3000, updateCounter, this);
+		batteryTimer.loop(5000, updateCounter, this);
 		//the integer is counting in thousands since it counts in milliseconds (i.e. 2000 is 2 seconds) 
 		//for the custom timer you must remember to start it on your own for it to work
 		batteryTimer.start();
@@ -713,6 +718,10 @@ GameOver.prototype = {
 	},
 	
 	create: function(){
+		
+		//stop music from play state 
+		backgroundMusic.stop();
+		
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
@@ -721,7 +730,7 @@ GameOver.prototype = {
 		deskGameOver.anchor.set(0.5);
 		
 		
-		var text = "You Lose";
+		var text = "You Got Blocked";
 		var style = {font: "30px Arial", fill: "#fff", align: "center" };
 		var retry = this.game.add.text(this.game.width/2, this.game.height - 200, text, style);
 		retry.anchor.set(0.5);
