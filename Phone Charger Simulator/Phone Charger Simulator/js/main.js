@@ -172,7 +172,7 @@ Instructions.prototype = {
 			F: '#FFFFFF'
 		};
 		
-		this.story_text = "Keep Your Phone Charged While answering questions";
+		this.story_text = "Welcome to Phone Charger Simulator";
 		
 		//this allows us to change many things like the font or give the text the ability to wrap on its own 
 		let text_style = {
@@ -187,23 +187,20 @@ Instructions.prototype = {
 		//pasting the text onto the screen 
 		game.add.text(32, 350, this.story_text, text_style);
 		
-		this.story_text = "This is only a playtest for the multitasking portion of the game";
-		game.add.text(32, 425, this.story_text, text_style);
+		this.story_text = "Keep Your Phone Charged While answering questions";
+		game.add.text(32, 400, this.story_text, text_style);
 		
-		this.story_text = "The narrative of the game is being written in twine";
-		game.add.text(32, 500, this.story_text, text_style);
-		
-		this.story_text = "click on start to begin the game";
-		game.add.text(32, 575, this.story_text, text_style);
+		this.story_text = "Click on the options at the bottom of the phone to deceive your significant other";
+		game.add.text(32, 475, this.story_text, text_style);
 		
 		this.story_text = "Use the mouse to click and drag the charger and press the buttons";
-		game.add.text(32, 625, this.story_text, text_style);
-		
-		this.story_text = "The charger must be plugged in to press the buttons";
-		game.add.text(32, 700, this.story_text, text_style);
+		game.add.text(32, 550, this.story_text, text_style);
 		
 		this.story_text = "Use W to move camera up and S to move camera down";
-		game.add.text(32, 775, this.story_text, text_style);
+		game.add.text(32, 625, this.story_text, text_style);
+		
+		this.story_text = "Click on start to begin the game";
+		game.add.text(32, 700, this.story_text, text_style);
 		
 		start_button = game.add.button(game.width/2, 850, 'Start_button', startGame, this, 'START_Button1', 'START_Button2');
 		start_button.anchor.set(0.5);
@@ -243,16 +240,9 @@ var sigOtherText;
 var yourText;
 var Option1;
 var Option2;
-var otherTextGroup;
-var yourTextGroup;
 var optionButton1;
 var optionButton2;
-var nameText;
-var PlayStyle;
-var PlayTitle1;
-var PlayTitle2;
-var PlayTitle3;
-var PlayTitle4;
+
 //arrays
 var peopleArray;
 var pastTextsArray;
@@ -262,6 +252,13 @@ var box1;
 var box2;
 var box3;
 var box4;
+var nameText;
+var PlayStyle;
+var PlayTitle1;
+var PlayTitle2;
+var PlayTitle3;
+var PlayTitle4;
+var SigOtherReplay;
 
 //use var GamePlay for the Play state
 var Play = function(game){
@@ -291,7 +288,7 @@ Play.prototype = {
 		music.stop();
 		
 		//array for names 
-		peopleArray = ['Bae', 'Me'];
+		peopleArray = ['Bae', 'Me', 'Bae is texting...'];
 		//array for the past text 
 		pastTextsArray = ["Where are you?", "Why aren't you picking up?", "Okay, ttyl"];
 		//where we create the background, platforms, player, baddies, and collectibles
@@ -311,7 +308,6 @@ Play.prototype = {
 		
 		//art asset to make the phone look better
 		var wordBar = game.add.sprite(161, 545, 'wordBar');
-		wordBar = game.add.sprite(161, 47, 'wordBar');
 		var textGroup = game.add.group();
 		var textBar = textGroup.create(160, 420, 'textBar');
 		textBar = textGroup.create(160, 300, 'textBar');
@@ -379,31 +375,36 @@ Play.prototype = {
 		
 		nameText = peopleArray[0];
 		PlayStyle = {font: "15px Arial", fill: "#fff", align: "center" };
-		PlayTitle1 = game.add.text(175, 432, nameText, PlayStyle);
+		PlayTitle1 = game.add.text(175, 420, nameText, PlayStyle);
 		
-		PlayTitle2 = game.add.text(175, 312, nameText, PlayStyle);
+		PlayTitle2 = game.add.text(175, 300, nameText, PlayStyle);
 		
-		PlayTitle3 = game.add.text(175, 192, nameText, PlayStyle);
+		PlayTitle3 = game.add.text(175, 180, nameText, PlayStyle);
 		
 		nameText = peopleArray[1];
-		PlayTitle4 = game.add.text(175, 72, nameText, PlayStyle);
+		PlayTitle4 = game.add.text(175, 60, nameText, PlayStyle);
+		
+		//this text is to indicate to the player that they have to wait before selecting options again 
+		nameText = peopleArray[2];
+		PlayStyle = {font: "12px Arial", fill: "#fff", align: "center"};
+		SigOtherReplay = game.add.text(175, 545, nameText, PlayStyle);
+		//It stays invisible until a choice is selected 
+		SigOtherReplay.visible =! SigOtherReplay.visible;
 		//this will be where the text that have word wrap be located 
 		
-		box1 = game.add.text(175, 450, sigOtherText, text_style);
-		box2 = game.add.text(175, 330, pastTextsArray[1], text_style);
-		box3 = game.add.text(175, 210, pastTextsArray[0], text_style);
-		box4 = game.add.text(175, 90, pastTextsArray[2], text_style);
+		box1 = game.add.text(175, 440, sigOtherText, text_style);
+		box2 = game.add.text(175, 320, pastTextsArray[1], text_style);
+		box3 = game.add.text(175, 200, pastTextsArray[0], text_style);
+		box4 = game.add.text(175, 80, pastTextsArray[2], text_style);
 		//look at the options given by having result go to the next dialogue in the Yarn node 
 		result = dialogue.next();
 		//now result has the options in an array result.value.options
-		//put the options available in the global variables for the options 
-		Option1 = result.value.options[0];
-		Option2 = result.value.options[1];
+		//put the options available in the global variables for the options
+		Option1 = game.add.text(175, 565, result.value.options[0], text_style);
+		Option2 = game.add.text(175, 625, result.value.options[1], text_style);
 		
-		//now paste the options on screen 
-		game.add.text(175, 565, Option1, text_style);
-		game.add.text(175, 625, Option2, text_style);
-		
+		//the bar up top that needs to be on top of the text 
+		wordBar = game.add.sprite(161, 47, 'wordBar');
 		//desk--------------------------------------------------------------------------------------------------------------
 		//the desk has a hole where the text will appear on the phone screen and behind the desk 
 		//The background desk for the game
@@ -460,6 +461,8 @@ Play.prototype = {
 		
 		
 	},
+	//end of Play state create function()
+	
 	
 	update: function(){
 		//camera controls with wasd keys
@@ -534,7 +537,11 @@ Play.prototype = {
 			game.state.start('GameOver');
 		}
 		
-	}
+		//this is to help with the changing dialogue 
+		
+	}//end of Play state update function()
+	
+	
 }
 
 //function fallingCharger 
@@ -570,17 +577,130 @@ function collisionHandler(){
 //choice1
 function choice1(){
 	//what happens when player chooses first choice
+	//move text up 
+	PlayTitle4.text = PlayTitle3.text;
+	PlayTitle3.text = PlayTitle2.text;
+	PlayTitle2.text = PlayTitle1.text;
 	
+	box4.text = box3.text;
+	box3.text = box2.text;
+	box2.text = box1.text;
+	
+	//now for the responce 
+	PlayTitle1.text = peopleArray[1];
+	box1.text = result.value.options[0];
+	//since the player chooses option 1
+	//select the first element in the array result.value.options[]
+	
+	result.value.select(0);
+	result = dialogue.next();
+	
+	//change the options to blank so the player won't choose one right away
+	Option1.text = " ";
+	Option2.text = " ";
+	
+	//play waiting for text from Significant Other animation here
+	//before game.time.events.add() so that it stop playing at the end 
+	//the text is invisible until here 
+	SigOtherReplay.visible =! SigOtherReplay.visible;
+	//make the buttons invisible to so they don't press them 
+	optionButton1.visible =! optionButton1.visible;
+	optionButton2.visible =! optionButton2.visible;
+	
+	//allow a few seconds to be wasted like in real life 
+	game.time.events.add(Phaser.Timer.SECOND*3, SigOtherText, this);
 	//play text sound effect
 	
 }
 
 function choice2(){
 	//what happens when player chooses second choice 
+	//move text up 
+	PlayTitle4.text = PlayTitle3.text;
+	PlayTitle3.text = PlayTitle2.text;
+	PlayTitle2.text = PlayTitle1.text;
 	
-	//play text sound effect 
+	box4.text = box3.text;
+	box3.text = box2.text;
+	box2.text = box1.text;
+	
+	//now for the responce 
+	PlayTitle1.text = peopleArray[1];
+	box1.text = result.value.options[1];
+	//since the player chooses option 2
+	//select the second element in the array result.value.options[]
+	
+	result.value.select(1);
+	result = dialogue.next();
+	
+	//change the options to blank so the player won't choose one right away
+	Option1.text = " ";
+	Option2.text = " ";
+	
+	//play waiting for text from Significant Other animation here
+	//before game.time.events.add() so that it stop playing at the end 
+	//the text is invisible until here 
+	SigOtherReplay.visible =! SigOtherReplay.visible;
+	//make the buttons invisible to so they don't press them 
+	optionButton1.visible =! optionButton1.visible;
+	optionButton2.visible =! optionButton2.visible;
+	
+	//allow a few seconds to be wasted like in real life 
+	game.time.events.add(Phaser.Timer.SECOND*3, SigOtherText, this);
+	//play text sound effect
 }
 
+//function SigOtherText
+function SigOtherText(){
+	//the significant other text 
+	//move text up 
+	PlayTitle4.text = PlayTitle3.text;
+	PlayTitle3.text = PlayTitle2.text;
+	PlayTitle2.text = PlayTitle1.text;
+	
+	box4.text = box3.text;
+	box3.text = box2.text;
+	box2.text = box1.text;
+	
+	//now for the responce 
+	PlayTitle1.text = peopleArray[0];
+	box1.text = result.value.text;
+	//box1.text is a text value instead of an options value because it is from the significant other side 
+	result = dialogue.next();
+	
+	//first check to see if result.done == true 
+	if(result.done == true){
+		game.state.start('GameOver');
+		
+	}else if(result.value.text == "You have been blocked"){
+		//if You got Blocked
+		//you can use text as a boolean to say that if the text is like this then do that
+		//this needs to be done because the narrative doesn't go through all the way for 
+		//result.done to be true on some of the branches
+	
+		result = dialogue.next();
+	}
+	
+
+	
+	//second check to see if result.done == true 
+	//so if we reach the end of the narrative then go to game over screen 
+	if(result.done == true){
+		game.state.start('GameOver');
+	}else{
+		//Now give the options boxes the different text 
+		Option1.text = result.value.options[0];
+		Option2.text = result.value.options[1];
+	}
+	//so the reason we go through with this is to make sure we can end properly
+	
+	
+	//make this invisible again 
+	SigOtherReplay.visible =! SigOtherReplay.visible;
+	//make the buttons visible again so they can press them  
+	optionButton1.visible =! optionButton1.visible;
+	optionButton2.visible =! optionButton2.visible;
+}
 //global variables used only for GameOver 
 var deskGameOver;
 //Use var GameOver for gameOver state 
@@ -628,8 +748,6 @@ GameOver.prototype = {
 		
 		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			//also a place where we can reset any values
-			
 			//changing the state must come last 
 			game.state.start('MainMenu');
 		}
