@@ -44,7 +44,7 @@ MainMenu.prototype = {
 		game.load.audio('music', 'assets/music/Menu_Music.mp3' );
 		game.load.audio('playMusic', 'assets/music/Background_Music.mp3' );
 		//json file 
-		game.load.json('story', 'assets/json/phonestory.json');
+		game.load.json('story', 'assets/json/phonestory_Version_2.json');
 	},
 	
 	create: function(){
