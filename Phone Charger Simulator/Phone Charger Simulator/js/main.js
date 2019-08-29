@@ -32,7 +32,9 @@ MainMenu.prototype = {
 	
 	preload: function(){
 		//preload assets for the game 
+		//spritesheets 
 		game.load.spritesheet('charger', 'assets/img/Charger_Broken_Full.png', 64, 225);
+		//images 
 		game.load.image('phoneFrame', 'assets/img/Phone_Frame.png');
 		game.load.image('phoneScreen', 'assets/img/Phone_Background.png');
 		game.load.image('desk', 'assets/img/Desk.png');
@@ -42,10 +44,13 @@ MainMenu.prototype = {
 		game.load.image('textBar', 'assets/img/Text_Bar.png');
 		game.load.image('credits', 'assets/img/creditScene.png');
 		game.load.image('topBar', 'assets/img/Top_Bar.png');
+		game.load.image('goodEnding', 'assets/img/Good_Ending.png');
+		game.load.image('mutualEnding', 'assets/img/Mutual_Ending.png');
+		//atlases
 		game.load.atlas('button', 'assets/img/Buttons_2.0.png', 'assets/img/Buttons_2.0.json');
-		game.load.audio('pop', 'assets/audio/pop01.mp3');
 		game.load.atlas('optionButton', 'assets/img/Options_Button_2.png', 'assets/img/Options_Button_2.json');
-		//music by PapaninKasettratat
+		//audio
+		game.load.audio('pop', 'assets/audio/pop01.mp3');
 		game.load.audio('music', 'assets/music/Menu_Music.mp3' );
 		game.load.audio('playMusic', 'assets/music/Background_Music.mp3' );
 		//json file 
@@ -321,7 +326,7 @@ Play.prototype = {
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		//have the camera start at the bottom 
-		game.camera.setPosition(0, 960);
+		game.camera.setPosition(0, 0);
 		//720 is the width of the game world not the canvas and 960 is the height 
 		//of the game world not the canvas 
 		//game.width and game.height takes the size of the canvas not the world 
@@ -416,7 +421,7 @@ Play.prototype = {
 		
 		let text_style1 = {
 			font: 'Times New Roman',
-			fontSize: 12, 
+			fontSize: 14, 
 			fill: this.palette.F,
 			//added in to give word wrap to the text 
 			wordWrap: true,
@@ -432,22 +437,22 @@ Play.prototype = {
 			wordWrap: true,
 			wordWrapWidth: 375,
 		};
-		
+
 		//pasting the text onto the screen 
 		
 		//this is for the username that people see on text 
 		
 		nameText = peopleArray[0];
 		PlayStyle = {font: "15px Arial", fill: "#fff", align: "center" };
-		PlayTitle1 = game.add.text(175, 420, nameText + " " + clock4, PlayStyle);
+		PlayTitle1 = game.add.text(200, 420, nameText + " " + clock4, PlayStyle);
 		
-		PlayTitle2 = game.add.text(175, 300, nameText + " " + clock3, PlayStyle);
-		
-		PlayTitle3 = game.add.text(175, 180, nameText + " " + clock2, PlayStyle);
-		
+		PlayTitle2 = game.add.text(200, 300, nameText + " " + clock3, PlayStyle);
+
+		PlayTitle3 = game.add.text(200, 180, nameText + " " + clock2, PlayStyle);
+
+		//switch text of array 
 		nameText = peopleArray[1];
-		PlayTitle4 = game.add.text(175, 60, nameText + " " + clock1, PlayStyle);
-		
+		PlayTitle4 = game.add.text(200, 60, nameText + " " + clock1, PlayStyle);
 		//this text is to indicate to the player that they have to wait before selecting options again 
 		nameText = peopleArray[2];
 		PlayStyle = {font: "10px Arial", fill: "#000", align: "center"};
@@ -573,7 +578,7 @@ Play.prototype = {
 					break;
 				}
 				//find a random integer to use 
-				var rndInteger = game.rnd.integerInRange(3, 6);
+				var rndInteger = game.rnd.integerInRange(9, 12);
 				//the animation is already playing as soon as the charger overlaps with the phone 
 				//this will decide what to do next after the seconds are over 
 				game.time.events.add(Phaser.Timer.SECOND*rndInteger, fallingCharger, this);
@@ -683,9 +688,12 @@ function choice1(){
 	box3.text = box2.text;
 	box2.text = box1.text;
 	
+	
+	
 	//now for the responce 
 	PlayTitle1.text = peopleArray[1] + " " + clockText.text;
 	box1.text = result.value.options[0];
+
 	//since the player chooses option 1
 	//select the first element in the array result.value.options[]
 	
@@ -728,6 +736,7 @@ function choice2(){
 	//now for the responce 
 	PlayTitle1.text = peopleArray[1] + " " + clockText.text;
 	box1.text = result.value.options[1];
+
 	//since the player chooses option 2
 	//select the second element in the array result.value.options[]
 	
@@ -754,6 +763,7 @@ function choice2(){
 //function SigOtherText
 function SigOtherText(){
 	//the significant other text 
+	
 	//move text up 
 	PlayTitle4.text = PlayTitle3.text;
 	PlayTitle3.text = PlayTitle2.text;
@@ -762,10 +772,11 @@ function SigOtherText(){
 	box4.text = box3.text;
 	box3.text = box2.text;
 	box2.text = box1.text;
-	
+
 	//now for the responce 
 	PlayTitle1.text = peopleArray[0] + " " + clockText.text;
 	box1.text = result.value.text;
+
 	endingText = result.value.text;
 	//box1.text is a text value instead of an options value because it is from the significant other side 
 	result = dialogue.next();
@@ -974,26 +985,10 @@ MutualBreakUp.prototype = {
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
+		game.add.sprite(0, 0, 'desk');
 		//Creating text for the game over screen 
-		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'desk');
+		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'mutualEnding');
 		deskGameOver.anchor.set(0.5);
-		
-		
-		var text = "Sometimes a relationship isn't worth it if it is toxic to both sides.";
-		var style = {font: "30px Arial", fill: "#fff", align: "center" };
-		var retry = this.game.add.text(this.game.width/2, 300, text, style);
-		retry.anchor.set(0.5);
-		
-		text = "press SPACEBAR to go back to main menu";
-		style = {font: "30px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 400, text, style);
-		retry.anchor.set(0.5);
-		
-		//GAME OVER
-		text = "I guess you did okay ";
-		style = {font: "60px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 200, text, style);
-		retry.anchor.set(0.5);
 		
 		start_button = game.add.button(game.width/2, 540, 'button', instructions, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
@@ -1037,26 +1032,10 @@ SavedIt.prototype = {
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
+		game.add.sprite(0, 0, 'desk');
 		//Creating text for the game over screen 
-		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'desk');
+		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'goodEnding');
 		deskGameOver.anchor.set(0.5);
-		
-		
-		var text = "Well you saved your relationship, but did you really want to? ";
-		var style = {font: "30px Arial", fill: "#fff", align: "center" };
-		var retry = this.game.add.text(this.game.width/2, 300, text, style);
-		retry.anchor.set(0.5);
-		
-		text = "press SPACEBAR to go back to main menu";
-		style = {font: "30px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 400, text, style);
-		retry.anchor.set(0.5);
-		
-		//GAME OVER
-		text = "Congratulations";
-		style = {font: "60px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 200, text, style);
-		retry.anchor.set(0.5);
 		
 		start_button = game.add.button(game.width/2, 540, 'button', instructions, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
