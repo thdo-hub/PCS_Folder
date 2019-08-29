@@ -53,6 +53,8 @@ MainMenu.prototype = {
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
 		game.load.audio('music', 'assets/music/Menu_Music.mp3' );
 		game.load.audio('playMusic', 'assets/music/Background_Music.mp3' );
+		game.load.audio('texting', 'assets/audio/Texting.mp3');
+		game.load.audio('messageReceived', 'assets/audio/Message_Received.mp3');
 		//json file 
 		game.load.json('story', 'assets/json/phonestory_Version_2.json');
 	},
@@ -632,7 +634,7 @@ function fallingCharger(){
 	//move the y position of the charger to make it seem like it fell off 
 	//since the if statement in update has charger.y be this (var - 17) then it's okay to say this
 	keepChargerInPlaceY = 960;
-	
+	game.sound.play('pop');
 	//change the booleans to so the if statements won't start when the charger is already in the phone 
 	pluggedIn = false;
 	bool = true;
@@ -678,7 +680,7 @@ function choice1(){
 	//what happens when player chooses first choice
 	
 	//play a sound to indicate the choice was selected 
-	game.sound.play('pop');
+	game.sound.play('texting');
 	//move text up 
 	PlayTitle4.text = PlayTitle3.text;
 	PlayTitle3.text = PlayTitle2.text;
@@ -723,7 +725,7 @@ function choice2(){
 	//what happens when player chooses second choice 
 	
 	//play a sound to indicate the choice was selected 
-	game.sound.play('pop');
+	game.sound.play('texting');
 	//move text up  
 	PlayTitle4.text = PlayTitle3.text;
 	PlayTitle3.text = PlayTitle2.text;
@@ -763,7 +765,7 @@ function choice2(){
 //function SigOtherText
 function SigOtherText(){
 	//the significant other text 
-	
+	game.sound.play('messageReceived');
 	//move text up 
 	PlayTitle4.text = PlayTitle3.text;
 	PlayTitle3.text = PlayTitle2.text;
