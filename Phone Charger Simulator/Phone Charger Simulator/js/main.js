@@ -118,13 +118,6 @@ MainMenu.prototype = {
 		
 		//pasting the text onto the screen 
 		game.add.text(32, 500, this.story_text, text_style);
-		
-		//How to begin the game 
-		text = "Press SPACEBAR to go to instructions";
-		style = {font: "30px Arial", fill: "#fff", align: "center"};
-		var begin = this.game.add.text(32, 700, text, style);
-		
-		
 		//play music background
 		music = game.add.audio('music', 0.5, true);
 		
@@ -872,18 +865,13 @@ Blocked.prototype = {
 		var retry = this.game.add.text(this.game.width/2, 300, text, style);
 		retry.anchor.set(0.5);
 		
-		text = "Press SPACEBAR to go back to main menu";
-		style = {font: "30px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 400, text, style);
-		retry.anchor.set(0.5);
-		
 		//GAME OVER
 		text = "Well, sucks to be you ";
 		style = {font: "60px Arial", fill: "#fff", align: "center" };
 		retry = this.game.add.text(this.game.width/2, 200, text, style);
 		retry.anchor.set(0.5);
 		
-		start_button = game.add.button(game.width/2, 540, 'button', instructions, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
+		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
 		
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
@@ -898,12 +886,11 @@ Blocked.prototype = {
 		bool = false;
 		timerBool = false;
 		
-		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			//changing the state must come last 
-			game.state.start('MainMenu');
-		}
 	}
+}
+
+function mainmenu(){
+	game.state.start('MainMenu');
 }
 
 //Battery Died end state----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -933,19 +920,14 @@ DeadBattery.prototype = {
 		var style = {font: "30px Arial", fill: "#fff", align: "center" };
 		var retry = this.game.add.text(this.game.width/2, 200, text, style);
 		retry.anchor.set(0.5);
-		
-		text = "Press SPACEBAR to go back to main menu";
-		style = {font: "30px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 400, text, style);
-		retry.anchor.set(0.5);
-		
+
 		//GAME OVER
 		text = " You need to remember to charge your phone more ";
 		style = {font: "60px Arial", fill: "#fff", align: "center" };
 		retry = this.game.add.text(this.game.width/2, 300, text, style);
 		retry.anchor.set(0.5);
 		
-		start_button = game.add.button(game.width/2, 540, 'button', instructions, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
+		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
 		
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
@@ -961,11 +943,6 @@ DeadBattery.prototype = {
 		bool = false;
 		timerBool = false;
 		
-		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			//changing the state must come last 
-			game.state.start('MainMenu');
-		}
 	}
 }
 
@@ -992,7 +969,7 @@ MutualBreakUp.prototype = {
 		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'mutualEnding');
 		deskGameOver.anchor.set(0.5);
 		
-		start_button = game.add.button(game.width/2, 540, 'button', instructions, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
+		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
 		
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
@@ -1008,11 +985,6 @@ MutualBreakUp.prototype = {
 		bool = false;
 		timerBool = false;
 		
-		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			//changing the state must come last 
-			game.state.start('MainMenu');
-		}
 	}
 }
 
@@ -1039,7 +1011,7 @@ SavedIt.prototype = {
 		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'goodEnding');
 		deskGameOver.anchor.set(0.5);
 		
-		start_button = game.add.button(game.width/2, 540, 'button', instructions, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
+		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
 		
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
@@ -1054,12 +1026,7 @@ SavedIt.prototype = {
 		pluggedIn = false;
 		bool = false;
 		timerBool = false;
-		
-		//updates to check if the player presses the SPACEBAR to begin Play state, which has the game.
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			//changing the state must come last 
-			game.state.start('MainMenu');
-		}
+
 	}
 }
 
@@ -1097,7 +1064,7 @@ Credits.prototype = {
 		
 		
 		//play the game 
-		start_button = game.add.button(game.width/2 + 15, 600, 'button', startGame, this, 'START2_Button2', 'START2_Button1', 'START2_Button3');
+		start_button = game.add.button(game.width/2 + 15, 600, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
 		
 	},
