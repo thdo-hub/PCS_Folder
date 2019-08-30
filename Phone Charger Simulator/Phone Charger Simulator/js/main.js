@@ -52,12 +52,14 @@ MainMenu.prototype = {
 		game.load.image('batteryImage', 'assets/img/battery.png');
 		game.load.image('W_Key', 'assets/img/W.png');
 		game.load.image('S_Key', 'assets/img/S.png');
+		game.load.image('trumpAlienSurprise', 'assets/img/TrumpAlien.png');
 		
 		//atlases
 		game.load.atlas('button', 'assets/img/Buttons_2.0.png', 'assets/img/Buttons_2.0.json');
 		game.load.atlas('optionButton', 'assets/img/Options_Button_2.png', 'assets/img/Options_Button_2.json');
 		//audio
 		game.load.audio('pop', 'assets/audio/pop01.mp3');
+		game.load.audio('pop2', 'assets/audio/pop02.mp3');
 		game.load.audio('music', 'assets/music/Menu_Music.mp3' );
 		game.load.audio('playMusic', 'assets/music/Background_Music.mp3' );
 		game.load.audio('texting', 'assets/audio/Texting.mp3');
@@ -168,7 +170,7 @@ Instructions.prototype = {
 	create: function(){
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
-		game.camera.setPosition(0, 800);
+		game.camera.setPosition(0, 0);
 		game.stage.backgroundColor = "#b58f7b";
 		
 		instruction_desk = game.add.sprite(0, 0, 'desk');
@@ -193,7 +195,7 @@ Instructions.prototype = {
 			F: '#FFFFFF'
 		};
 		
-		this.story_text = "Welcome to Phone Charger Simulator";
+		
 		
 		//this allows us to change many things like the font or give the text the ability to wrap on its own 
 		let text_style = {
@@ -202,32 +204,36 @@ Instructions.prototype = {
 			fill: this.palette.F,
 			//added in to give word wrap to the text 
 			wordWrap: true,
-			wordWrapWidth: 570,
+			wordWrapWidth: 720,
 		};
 		
 		//pasting the text onto the screen 
-		game.add.text(32, 350, this.story_text, text_style);
+		this.story_text = "WELCOME TO PHONE CHARGER SIMULATOR";
+		game.add.text(12, 50, this.story_text, text_style);
 		
-		this.story_text = "Keep Your Phone Charged While answering questions";
-		game.add.text(32, 400, this.story_text, text_style);
+		this.story_text = "- KEEP YOUR PHONE CHARGED WHILE ANSWERING YOUR SIGNIFICANT OTHER.";
+		game.add.text(12, 115, this.story_text, text_style);
 		
-		this.story_text = "Click on the options at the bottom of the phone to deceive your significant other";
-		game.add.text(32, 475, this.story_text, text_style);
+		this.story_text = "- CLICK ON THE OPTIONS GIVEN TO YOU TO FIND OUT WHETHER THEY ARE TRYING TO DECEIVE YOU OR NOT.";
+		game.add.text(12, 205, this.story_text, text_style);
 		
-		this.story_text = "Use the mouse to click and drag the charger and press the buttons";
-		game.add.text(32, 550, this.story_text, text_style);
+		this.story_text = "- USE THE MOUSE TO DRAG THE CHARGER OR USE THE ARROW KEYS TO MOVE IT AROUND.";
+		game.add.text(12, 320, this.story_text, text_style);
 		
-		this.story_text = "Use W to move camera up and S to move camera down";
-		game.add.text(32, 625, this.story_text, text_style);
+		this.story_text = "- USE THE 'W' KEY TO MOVE THE CAMERA UP AND THE 'S' KEY TO MOVE THE CAMERA DOWN.";
+		game.add.text(12, 400, this.story_text, text_style);
 		
-		this.story_text = "Click on start to begin the game";
-		game.add.text(32, 700, this.story_text, text_style);
+		this.story_text = "- CLICK ON START TO BEGIN THE GAME.";
+		game.add.text(12, 525, this.story_text, text_style);
 		
-		start_button = game.add.button(game.width/2, 775, 'button', startGame, this, 'START2_Button2', 'START2_Button1', 'START2_Button3');
+		start_button = game.add.button(200, 600, 'button', startGame, this, 'START2_Button2', 'START2_Button1', 'START2_Button3');
 		start_button.anchor.set(0.5);
 		
-		credits_button = game.add.button(game.width/2, 840, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
+		credits_button = game.add.button(500, 600, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
 		credits_button.anchor.set(0.5);
+		//a little surprise if the player wants to find it 
+		game.add.sprite(game.width/2, 650, 'trumpAlienSurprise');
+		
 		
 	},
 	
@@ -309,7 +315,21 @@ var clock1;
 var clock2;
 var clock3;
 var clock4;
-
+//the icon bools are false when its the significant other and true when it is the player 
+var iconBool1 = false;
+var iconBool2 = false;
+var iconBool3 = false;
+var iconBool4 = false;
+var icon1;
+var icon2;
+var icon3;
+var icon4;
+//arrow keys to move the charger as a secondary control 
+var cursors;
+var up;
+var down;
+var wKey;
+var sKey;
 //use var GamePlay for the Play state-----------------------------------------------------------------------------------------------------------------------------------------------------
 var Play = function(game){
 	
@@ -446,27 +466,65 @@ Play.prototype = {
 		
 		nameText = peopleArray[0];
 		PlayStyle = {font: "16px Arial", fill: "#fff", align: "center" };
+		//textbox 1
 		PlayTitle1 = game.add.text(200, 420, nameText + " " + clock4, PlayStyle);
+		//icon1 
+		//iconBools are false if it is the significant other and true if its the player 
+		//the frame for the icons are 1 when it is the significant other and 0 when it is the player 
+		iconBool1 = false;
+		icon1 = game.add.sprite(180, 430, 'icons');
+		icon1.frame = 1;
+		icon1.anchor.set(0.5);
+		icon1.scale.setTo(0.4, 0.4);
 		
+		//textbox 2
 		PlayTitle2 = game.add.text(200, 300, nameText + " " + clock3, PlayStyle);
-
+		//icon2 
+		//iconBools are false if it is the significant other and true if its the player 
+		//the frame for the icons are 1 when it is the significant other and 0 when it is the player 
+		iconBool2 = false;
+		icon2 = game.add.sprite(180, 310, 'icons');
+		icon2.frame = 1;
+		icon2.anchor.set(0.5);
+		icon2.scale.setTo(0.4, 0.4);
+		
+		//textbox 3
 		PlayTitle3 = game.add.text(200, 180, nameText + " " + clock2, PlayStyle);
-
-		//switch text of array 
+		//icon2 
+		//iconBools are false if it is the significant other and true if its the player 
+		//the frame for the icons are 1 when it is the significant other and 0 when it is the player 
+		iconBool3 = false;
+		icon3 = game.add.sprite(180, 190, 'icons');
+		icon3.frame = 1;
+		icon3.anchor.set(0.5);
+		icon3.scale.setTo(0.4, 0.4);
+		
+		//switch text of array to set up that it's you 
 		nameText = peopleArray[1];
+		//textbox 4
 		PlayTitle4 = game.add.text(200, 60, nameText + " " + clock1, PlayStyle);
+		//icon2 
+		//iconBools are false if it is the significant other and true if its the player 
+		//the frame for the icons are 1 when it is the significant other and 0 when it is the player 
+		iconBool4 = true;
+		icon4 = game.add.sprite(180, 70, 'icons');
+		icon4.frame = 0;
+		icon4.anchor.set(0.5);
+		icon4.scale.setTo(0.4, 0.4);
+		
 		//this text is to indicate to the player that they have to wait before selecting options again 
 		nameText = peopleArray[2];
+		//"Bae is texting"
 		PlayStyle = {font: "10px Arial", fill: "#000", align: "center"};
 		SigOtherReplay = game.add.text(175, 545, nameText, PlayStyle);
 		//It stays invisible until a choice is selected 
 		SigOtherReplay.visible =! SigOtherReplay.visible;
 		//this will be where the text that have word wrap be located 
 		
-		box1 = game.add.text(175, 440, sigOtherText, text_style1);
-		box2 = game.add.text(175, 320, pastTextsArray[1], text_style1);
-		box3 = game.add.text(175, 200, pastTextsArray[0], text_style1);
-		box4 = game.add.text(175, 80, pastTextsArray[2], text_style1);
+		box1 = game.add.text(175, 450, sigOtherText, text_style1);
+		box2 = game.add.text(175, 330, pastTextsArray[1], text_style1);
+		box3 = game.add.text(175, 210, pastTextsArray[0], text_style1);
+		box4 = game.add.text(175, 90, pastTextsArray[2], text_style1);
 		//look at the options given by having result go to the next dialogue in the Yarn node 
 		result = dialogue.next();
 		//now result has the options in an array result.value.options
@@ -542,6 +600,22 @@ Play.prototype = {
 		//now for the text of the clock 
 		clockText = game.add.text(450, 50, hour + ':' + minute1 + minute2, {fontSize: '13px', fill: '#fff'});
 		
+		//cursor movement for the charger to be moved by the arrow keys------------------------------------------------------- 
+		//movement using the keyboard manager in phaser goes in update()
+		cursors = game.input.keyboard.createCursorKeys();
+		
+		//controls for the camera----------------------------------------------------------------------------------------------
+		//this will display the instructions for the screen 
+		//have them fixed to the camera so the player know how to move the camera at all times 
+		wKey = game.add.sprite(50, 300, 'W_Key');
+		wKey.fixedToCamera = true;
+		up = game.add.text(55, 260, 'UP', {fontSize: '30px', fill: '#fff'} );
+		up.fixedToCamera = true;
+		sKey = game.add.sprite(50, 350, 'S_Key');
+		sKey.fixedToCamera = true;
+		down = game.add.text(25, 405, 'DOWN', {fontSize: '30px', fill: '#fff'} );
+		down.fixedToCamera = true;
+		
 	},
 	//end of Play state create function()
 	
@@ -553,6 +627,18 @@ Play.prototype = {
 		}
 		if(game.input.keyboard.isDown(Phaser.Keyboard.S) ){
 			game.camera.y += 10;
+		}
+		//charger movement 
+		if(cursors.left.isDown){
+			charger.x -= 8;
+		}else if(cursors.right.isDown){
+			charger.x += 8;
+		}else if(cursors.down.isDown){
+			charger.y += 8;
+		}else if(cursors.up.isDown){
+			charger.y -= 8;
+		}else{
+			//do nothing 
 		}
 		
 		//play an animation that show the charger may fall out of the phone 
@@ -683,9 +769,47 @@ function choice1(){
 	game.sound.play('texting');
 	//move text up 
 	PlayTitle4.text = PlayTitle3.text;
+	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool3 == false){
+		//if the text is from the significant other 
+		iconBool4 = false;
+		icon4.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool4 = true;
+		icon4.frame = 0;
+	}
+	
 	PlayTitle3.text = PlayTitle2.text;
+	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool2 == false){
+		//if the text is from the significant other 
+		iconBool3 = false;
+		icon3.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool3 = true;
+		icon3.frame = 0;
+	}
+	
 	PlayTitle2.text = PlayTitle1.text;
 	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool1 == false){
+		//if the text is from the significant other 
+		iconBool2 = false;
+		icon2.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool2 = true;
+		icon2.frame = 0;
+	}
+	//moving text up the phone screen 
 	box4.text = box3.text;
 	box3.text = box2.text;
 	box2.text = box1.text;
@@ -693,8 +817,11 @@ function choice1(){
 	
 	
 	//now for the responce 
+	//since this is from the player 
 	PlayTitle1.text = peopleArray[1] + " " + clockText.text;
 	box1.text = result.value.options[0];
+	iconBool1 = true;
+	icon1.frame = 0;
 
 	//since the player chooses option 1
 	//select the first element in the array result.value.options[]
@@ -728,9 +855,47 @@ function choice2(){
 	game.sound.play('texting');
 	//move text up  
 	PlayTitle4.text = PlayTitle3.text;
+	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool3 == false){
+		//if the text is from the significant other 
+		iconBool4 = false;
+		icon4.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool4 = true;
+		icon4.frame = 0;
+	}
+	
 	PlayTitle3.text = PlayTitle2.text;
+	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool2 == false){
+		//if the text is from the significant other 
+		iconBool3 = false;
+		icon3.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool3 = true;
+		icon3.frame = 0;
+	}
+	
 	PlayTitle2.text = PlayTitle1.text;
 	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool1 == false){
+		//if the text is from the significant other 
+		iconBool2 = false;
+		icon2.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool2 = true;
+		icon2.frame = 0;
+	}
+	//moving text up the phone screen 
 	box4.text = box3.text;
 	box3.text = box2.text;
 	box2.text = box1.text;
@@ -738,7 +903,8 @@ function choice2(){
 	//now for the responce 
 	PlayTitle1.text = peopleArray[1] + " " + clockText.text;
 	box1.text = result.value.options[1];
-
+	iconBool1 = true;
+	icon1.frame = 0;
 	//since the player chooses option 2
 	//select the second element in the array result.value.options[]
 	
@@ -765,12 +931,50 @@ function choice2(){
 //function SigOtherText
 function SigOtherText(){
 	//the significant other text 
-	game.sound.play('messageReceived');
+	game.sound.play('pop2');
 	//move text up 
 	PlayTitle4.text = PlayTitle3.text;
+	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool3 == false){
+		//if the text is from the significant other 
+		iconBool4 = false;
+		icon4.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool4 = true;
+		icon4.frame = 0;
+	}
+	
 	PlayTitle3.text = PlayTitle2.text;
+	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool2 == false){
+		//if the text is from the significant other 
+		iconBool3 = false;
+		icon3.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool3 = true;
+		icon3.frame = 0;
+	}
+	
 	PlayTitle2.text = PlayTitle1.text;
 	
+	//if statement to change the boolean of textbox 4 to match textbox 3 so the icons can scroll up 
+	//then change the icons to match with the boolean, so icon.frame is 0 if this is the player which boolean value is true 
+	if(iconBool1 == false){
+		//if the text is from the significant other 
+		iconBool2 = false;
+		icon2.frame = 1;
+	}else{
+		//if text is from the player 
+		iconBool2 = true;
+		icon2.frame = 0;
+	}
+	//moving text up the phone screen 
 	box4.text = box3.text;
 	box3.text = box2.text;
 	box2.text = box1.text;
@@ -778,7 +982,9 @@ function SigOtherText(){
 	//now for the responce 
 	PlayTitle1.text = peopleArray[0] + " " + clockText.text;
 	box1.text = result.value.text;
-
+	iconBool1 = false;
+	icon1.frame = 1;
+	
 	endingText = result.value.text;
 	//box1.text is a text value instead of an options value because it is from the significant other side 
 	result = dialogue.next();
@@ -786,7 +992,7 @@ function SigOtherText(){
 	//the if statement check to make sure the player heads to the right ending 
 	//first check to see if result.done == true 
 	if(result.done == true){
-		
+		//check the text to go to the right ending 
 		if(result.done == true && endingText == blockArray[0] ){
 			game.state.start('Blocked');
 		}else if(result.done == true && endingText == blockArray[1] ){
@@ -813,12 +1019,15 @@ function SigOtherText(){
 		//you can use text as a boolean to say that if the text is like this then do that
 		//this needs to be done because the narrative doesn't go through all the way for 
 		//result.done to be true on some of the branches taken
+		//so if the narrative is at the end and is not at result.done this takes the text value of result
+		//and saves it for the big if and else if statements below this one 
+		//then goes the dialogue.next() so result.done can be true.
 		if(result.done == false){
 			endingText = result.value.text;
 			result = dialogue.next();
 		}
 		
-		
+		//This giant block of if and else if statements are used to make sure the player goes to the right ending 
 		if(result.done == true && endingText == blockArray[0] ){
 			game.state.start('Blocked');
 		}else if(result.done == true && endingText == blockArray[1] ){
@@ -831,10 +1040,16 @@ function SigOtherText(){
 			game.state.start('MutualBreakUp');
 		}else if(result.done == true && endingText == savedArray[0] ){
 			game.state.start('SavedIt');
+		}else if(result.done == true && endingText == savedArray[1] ){
+			game.state.start('SavedIt');
+		}else{
+			//if nothing else worked 
+			game.state.start('MutualBreakUp');
 		}
 		
 	}else{
 		//now give the options boxes the different text 
+		//olny if result.done is false and the endingText variable doesn't match with any of the strings in our arrays 
 		Option1.text = result.value.options[0];
 		Option2.text = result.value.options[1];
 	}
@@ -847,6 +1062,9 @@ function SigOtherText(){
 	optionButton2.visible =! optionButton2.visible;
 }
 //global variables used only for GameOver 
+
+
+//all game over screen are from here on out 
 var deskGameOver;
 //Use var Blocked for You got blocked state------------------------------------------------------------------------------------------------------------------------------------------------ 
 var Blocked = function(game){};
@@ -861,7 +1079,8 @@ Blocked.prototype = {
 		
 		//stop music from play state 
 		backgroundMusic.stop();
-		
+		//play sound effect 
+		game.sound.play('messageReceived');
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
@@ -869,21 +1088,20 @@ Blocked.prototype = {
 		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'blockedEnding');
 		deskGameOver.anchor.set(0.5);
 		
-		
+		//text
 		var text = "You got blocked";
-		var style = {font: "30px Arial", fill: "#fff", align: "center" };
-		var retry = this.game.add.text(this.game.width/2, 300, text, style);
+		var style = {font: "60px Arial", fill: "#fff", align: "center" };
+		var retry = this.game.add.text(this.game.width/2, 140, text, style);
 		retry.anchor.set(0.5);
 		
-		//GAME OVER
 		text = "Well, sucks to be you ";
 		style = {font: "60px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 200, text, style);
+		retry = this.game.add.text(this.game.width/2, 50, text, style);
 		retry.anchor.set(0.5);
-		
+		//button to go back to the main menu 
 		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
-		
+		//button to go to the credits 
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
 		credits_button.anchor.set(0.5);
 		
@@ -917,29 +1135,28 @@ DeadBattery.prototype = {
 		
 		//stop music from play state 
 		backgroundMusic.stop();
-		
+		//play sound effect 
+		game.sound.play('messageReceived');
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
 		//Creating text for the game over screen 
 		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'deadBatteryEnding');
 		deskGameOver.anchor.set(0.5);
-		
-		
+				
 		var text = "Your battery died and she got fed up.";
 		var style = {font: "30px Arial", fill: "#fff", align: "center" };
-		var retry = this.game.add.text(this.game.width/2, 200, text, style);
+		var retry = this.game.add.text(this.game.width/2, 50, text, style);
 		retry.anchor.set(0.5);
 
-		//GAME OVER
 		text = " You need to remember to charge your phone more ";
 		style = {font: "60px Arial", fill: "#fff", align: "center" };
-		retry = this.game.add.text(this.game.width/2, 300, text, style);
+		retry = this.game.add.text(this.game.width/2, 140, text, style);
 		retry.anchor.set(0.5);
-		
+		//button to go back to the main menu 
 		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
-		
+		//button for the credits 
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
 		credits_button.anchor.set(0.5);
 		
@@ -970,7 +1187,8 @@ MutualBreakUp.prototype = {
 		
 		//stop music from play state 
 		backgroundMusic.stop();
-		
+		//play sound effect 
+		game.sound.play('messageReceived');
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
@@ -979,9 +1197,20 @@ MutualBreakUp.prototype = {
 		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'mutualEnding');
 		deskGameOver.anchor.set(0.5);
 		
+		//text for the player to know the situation 
+		var text = "Sometimes a relationship doesn't last";
+		var style = {font: "30px Arial", fill: "#fff", align: "center" };
+		var retry = this.game.add.text(this.game.width/2, 50, text, style);
+		retry.anchor.set(0.5);
+		
+		text = "At least you got out of it while you could";
+		style = {font: "30px Arial", fill: "#fff", align: "center" };
+		retry = this.game.add.text(this.game.width/2, 100, text, style);
+		retry.anchor.set(0.5);
+		//button to go back to the main menu 
 		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
-		
+		//buttons to see the credits 
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
 		credits_button.anchor.set(0.5);
 		
@@ -1012,7 +1241,8 @@ SavedIt.prototype = {
 		
 		//stop music from play state 
 		backgroundMusic.stop();
-		
+		//play sound effect 
+		game.sound.play('messageReceived');
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
@@ -1021,9 +1251,21 @@ SavedIt.prototype = {
 		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'goodEnding');
 		deskGameOver.anchor.set(0.5);
 		
+		//text for some clarification for the player of which ending they got 	
+		var text = "Congratulations";
+		var style = {font: "50px Arial", fill: "#fff", align: "center" };
+		var retry = this.game.add.text(this.game.width/2, 50, text, style);
+		retry.anchor.set(0.5);
+		
+		text = "You saved your relationship";
+		style = {font: "50px Arial", fill: "#fff", align: "center" };
+		retry = this.game.add.text(this.game.width/2, 100, text, style);
+		retry.anchor.set(0.5);
+		
+		//button so the player can return to the main menu 
 		start_button = game.add.button(game.width/2, 540, 'button', mainmenu, this, 'NEXT_Button2', 'NEXT_Button1', 'NEXT_Button3');
 		start_button.anchor.set(0.5);
-		
+		//button so the player can see the credits
 		credits_button = game.add.button(game.width/2, 590, 'button', creditsPage, this, 'CREDITS_Button2', 'CREDITS_Button1', 'CREDITS_Button3');
 		credits_button.anchor.set(0.5);
 		
@@ -1096,4 +1338,5 @@ game.state.add('DeadBattery', DeadBattery);
 game.state.add('MutualBreakUp', MutualBreakUp);
 game.state.add('SavedIt', SavedIt);
 game.state.add('Credits', Credits);
+//game begins at the main menu 
 game.state.start('MainMenu');
