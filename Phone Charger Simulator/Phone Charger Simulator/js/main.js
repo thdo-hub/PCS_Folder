@@ -34,6 +34,7 @@ MainMenu.prototype = {
 		//preload assets for the game 
 		//spritesheets 
 		game.load.spritesheet('charger', 'assets/img/Charger_Broken_Full.png', 64, 225);
+		game.load.spritesheet('icons', 'assets/img/Icons.png', 48, 48);
 		//images 
 		game.load.image('phoneFrame', 'assets/img/Phone_Frame.png');
 		game.load.image('phoneScreen', 'assets/img/Phone_Background.png');
@@ -46,6 +47,12 @@ MainMenu.prototype = {
 		game.load.image('topBar', 'assets/img/Top_Bar.png');
 		game.load.image('goodEnding', 'assets/img/Good_Ending.png');
 		game.load.image('mutualEnding', 'assets/img/Mutual_Ending.png');
+		game.load.image('blockedEnding', 'assets/img/End_blockedbybae.png');
+		game.load.image('deadBatteryEnding', 'assets/img/End_deadbattery.png');
+		game.load.image('batteryImage', 'assets/img/battery.png');
+		game.load.image('W_Key', 'assets/img/W.png');
+		game.load.image('S_Key', 'assets/img/S.png');
+		
 		//atlases
 		game.load.atlas('button', 'assets/img/Buttons_2.0.png', 'assets/img/Buttons_2.0.json');
 		game.load.atlas('optionButton', 'assets/img/Options_Button_2.png', 'assets/img/Options_Button_2.json');
@@ -56,7 +63,7 @@ MainMenu.prototype = {
 		game.load.audio('texting', 'assets/audio/Texting.mp3');
 		game.load.audio('messageReceived', 'assets/audio/Message_Received.mp3');
 		//json file 
-		game.load.json('story', 'assets/json/phonestory_Version_2.json');
+		game.load.json('story', 'assets/json/PCS_Story_Version_3.json');
 	},
 	
 	create: function(){
@@ -75,7 +82,7 @@ MainMenu.prototype = {
 		phoneFrameMainMenu.anchor.set(0.5);
 		//scale to fit background on screen 
 		//bgMain.scale.setTo(1, 1);
-		//game.stage.backgroundColor = "#4bb1b4";
+		game.stage.backgroundColor = "#b58f7b";
 		
 		//function for the text wrap
 		function addText(x, y, text) {
@@ -119,7 +126,7 @@ MainMenu.prototype = {
 		//pasting the text onto the screen 
 		game.add.text(32, 500, this.story_text, text_style);
 		//play music background
-		music = game.add.audio('music', 0.5, true);
+		music = game.add.audio('music', 0.1, true);
 		
 		game.sound.setDecodedCallback(music, start, this);
 		
@@ -162,6 +169,7 @@ Instructions.prototype = {
 		//changes the bounds of the world to not be just the canvas
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 800);
+		game.stage.backgroundColor = "#b58f7b";
 		
 		instruction_desk = game.add.sprite(0, 0, 'desk');
 		//function for the text wrap
@@ -325,12 +333,12 @@ Play.prototype = {
 		//720 is the width of the game world not the canvas and 960 is the height 
 		//of the game world not the canvas 
 		//game.width and game.height takes the size of the canvas not the world 
-		
+		game.stage.backgroundColor = "#b58f7b";
 		//stop music from the menu from playing any further
 		music.stop();
 		//start music for play state 
 		//play music background
-		backgroundMusic = game.add.audio('playMusic', 0.5, true);
+		backgroundMusic = game.add.audio('playMusic', 1, true);
 		
 		backgroundMusic.play();
 		//array for names 
@@ -340,7 +348,7 @@ Play.prototype = {
 		
 		//array for ending text 
 		mutualArray = ["You have blocked this user", "Good to know we're on the same page. Well I was happy we could amically break up. I'll see you around in school then.", "The End"];
-		savedArray = ["ttyl"];
+		savedArray = ["ttyl", "K talk to you later"];
 		blockArray = ["You are blocked", "You have been blocked"];
 		
 		clock1 = "10:48";
@@ -348,7 +356,6 @@ Play.prototype = {
 		clock3 = "11:59";
 		clock4 = "9:19";
 		
-		game.stage.backgroundColor = "#4bb1b4";
 		//physics for the game using ARCADE Physics 
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		
@@ -415,8 +422,8 @@ Play.prototype = {
 		};
 		
 		let text_style1 = {
-			font: 'Times New Roman',
-			fontSize: 14, 
+			font: 'Arial',
+			fontSize: 15, 
 			fill: this.palette.F,
 			//added in to give word wrap to the text 
 			wordWrap: true,
@@ -425,7 +432,7 @@ Play.prototype = {
 		//this allows us to change many things like the font or give the text the ability to wrap on its own
 		//this is also the style of font 
 		let text_style2 = {
-			font: 'Times New Roman',
+			font: 'Arial',
 			fontSize: 12, 
 			fill: this.palette.G,
 			//added in to give word wrap to the text 
@@ -438,7 +445,7 @@ Play.prototype = {
 		//this is for the username that people see on text 
 		
 		nameText = peopleArray[0];
-		PlayStyle = {font: "15px Arial", fill: "#fff", align: "center" };
+		PlayStyle = {font: "16px Arial", fill: "#fff", align: "center" };
 		PlayTitle1 = game.add.text(200, 420, nameText + " " + clock4, PlayStyle);
 		
 		PlayTitle2 = game.add.text(200, 300, nameText + " " + clock3, PlayStyle);
@@ -792,6 +799,8 @@ function SigOtherText(){
 			game.state.start('MutualBreakUp');
 		}else if(result.done == true && endingText == savedArray[0] ){
 			game.state.start('SavedIt');
+		}else if(result.done == true && endingText == savedArray[1] ){
+			game.state.start('SavedIt');
 		}else{
 			//if nothing else worked 
 			game.state.start('MutualBreakUp');
@@ -805,21 +814,22 @@ function SigOtherText(){
 		//this needs to be done because the narrative doesn't go through all the way for 
 		//result.done to be true on some of the branches taken
 		if(result.done == false){
+			endingText = result.value.text;
 			result = dialogue.next();
 		}
 		
 		
-		if(result.done == true && result.value.text == blockArray[0] ){
+		if(result.done == true && endingText == blockArray[0] ){
 			game.state.start('Blocked');
-		}else if(result.done == true && result.value.text == blockArray[1] ){
+		}else if(result.done == true && endingText == blockArray[1] ){
 			game.state.start('Blocked');
-		}else if(result.done == true && result.value.text == mutualArray[0] ){
+		}else if(result.done == true && endingText == mutualArray[0] ){
 			game.state.start('MutualBreakUp');
-		}else if(result.done == true && result.value.text == mutualArray[1] ){
+		}else if(result.done == true && endingText == mutualArray[1] ){
 			game.state.start('MutualBreakUp');
-		}else if(result.done == true && result.value.text == mutualArray[2] ){
+		}else if(result.done == true && endingText == mutualArray[2] ){
 			game.state.start('MutualBreakUp');
-		}else if(result.done == true && result.value.text == savedArray[0] ){
+		}else if(result.done == true && endingText == savedArray[0] ){
 			game.state.start('SavedIt');
 		}
 		
@@ -856,7 +866,7 @@ Blocked.prototype = {
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
 		//Creating text for the game over screen 
-		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'desk');
+		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'blockedEnding');
 		deskGameOver.anchor.set(0.5);
 		
 		
@@ -912,7 +922,7 @@ DeadBattery.prototype = {
 		game.world.setBounds(0, 0, 720, 960);
 		game.camera.setPosition(0, 0);
 		//Creating text for the game over screen 
-		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'desk');
+		deskGameOver = game.add.sprite(game.width/2, game.height/2, 'deadBatteryEnding');
 		deskGameOver.anchor.set(0.5);
 		
 		

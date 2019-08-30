@@ -1,0 +1,374 @@
+[
+	{
+		"title": "Start",
+		"tags": "",
+		"body": "Hey I have something to tell you...\n\n[[What..... |pass2]]\n[[I knew it was Alex all along |pass3]]",
+		"position": {
+			"x": 540,
+			"y": 260
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass2",
+		"tags": "",
+		"body": "I think we should take a break you know romantically. I've been through a lot the past few months and I don't think I have time for a relationship right now.\n\n[[But whats the issue if you need space I can give it |pass6]]\n\n[[Why don't you just admit you were cheating |pass5]]\n",
+		"position": {
+			"x": 187,
+			"y": 340
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass3",
+		"tags": "",
+		"body": "Why are you bringing Alex into this. You know what this is the exact reason I don't feel happy in this relationship. You're too insecure.\r\n\r\n[[Well thats what happens when you spend more time with a \"friend\" than your significant other |pass5]]\r\n\r\n[[I'm sorry I just had a long day at work |pass4]]",
+		"position": {
+			"x": 934,
+			"y": 243
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass5",
+		"tags": "",
+		"body": "You are blocked",
+		"position": {
+			"x": 7,
+			"y": 569
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass6",
+		"tags": "",
+		"body": "Well I've been really busy with premed stuff lately. I also didn't do as well as I expected on my o'chem midterm...\r\n\r\n[[Oh I'm sure you'll do better next time |pass7]]\r\n[[Well that's what you get for spending time with Alex|pass8]]",
+		"position": {
+			"x": 410,
+			"y": 557
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass7",
+		"tags": "",
+		"body": "I might but even then I might still not get an A in the class and you know how important this class is for my med school application.\r\n\r\n[[Still one B is not the end of the world, but I understand how important grades are for you. |pass20]]\r\n\r\n[[A B isn't going to ruin your life |pass21]]",
+		"position": {
+			"x": 257,
+			"y": 815
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass8",
+		"tags": "",
+		"body": "Alex is just a friend more specifically a study buddy so chill\r\n\r\n[[ok fine I guess I'll believe it |pass9]]\r\n[[Alex isn't just a friend why are you liking all their pictures on instagram |pass10]]",
+		"position": {
+			"x": 595,
+			"y": 804
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass10",
+		"tags": "",
+		"body": "Because I see nice pics and I double tap them.... Maybe you should spend less time worrying about my social media activity and more time on your obvious issues.\r\n\r\n\r\n\r\n[[Well maybe you should be a better partner than the one you're being like right now |pass61]]\r\n",
+		"position": {
+			"x": 768,
+			"y": 1074
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass9",
+		"tags": "",
+		"body": "Why are you so passive aggressive I understand that you are under a lot of pressure because of work but you have to learn to express your concerns in a healthier manner.\r\n\r\n[[What are you my therapist |pass11]]\r\n[[I guess you are right I should work on it|pass12]]",
+		"position": {
+			"x": 498,
+			"y": 1078
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass21",
+		"tags": "",
+		"body": "You know what I'm done with you\r\n\r\nYou have been blocked\r\n",
+		"position": {
+			"x": 246,
+			"y": 1039
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass20",
+		"tags": "",
+		"body": "Sure you do.After all you must be content with getting C's\r\n\r\n[[You know what I'm done |pass28]]\r\n[[You know what I'm done |pass28]]",
+		"position": {
+			"x": 38,
+			"y": 1038
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass28",
+		"tags": "",
+		"body": "You have blocked this user",
+		"position": {
+			"x": 53,
+			"y": 1306
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass11",
+		"tags": "",
+		"body": "I'm not your therapist but I'm sick of your passive aggressive behavior.\r\n\r\n[[Well what can I do I'm tired of not being able to spend time with you |pass13]]\r\n\r\n[[Then why don't you leave me |pass14]]\r\n",
+		"position": {
+			"x": 418,
+			"y": 1329
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass12",
+		"tags": "",
+		"body": "Good. Well I have to go to my internship at the hospital today. If you want we can talk on the phone tommorow and sort out any issues.\r\n\r\n[[Alright sounds good |pass30]]\r\n[[Nevermind I don't think I want to continue this relationship anymore\r\n|pass28]]",
+		"position": {
+			"x": 635,
+			"y": 1328
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass13",
+		"tags": "",
+		"body": "I'm pretty tired of not being able to spend time together. But the sad truth maybe that we both don't have the time for a relationship right now.\r\n\r\n[[I don't need a relationship with someone who doesn't have the time for me |pass15]]\r\n\r\n[[I think this isn't a right time for a relationship either |pass16]]",
+		"position": {
+			"x": 281,
+			"y": 1549
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass14",
+		"tags": "",
+		"body": "Yea maybe you should\r\n\r\n[[Wow so it's this easy for you |pass51]]\r\n[[Wow so it's this easy for you |pass51]]",
+		"position": {
+			"x": 510,
+			"y": 1561
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass15",
+		"tags": "",
+		"body": "Yes this is exactly why I don't feel happy in this relationship.\r\n\r\nYou have been blocked",
+		"position": {
+			"x": 116,
+			"y": 1812
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass16",
+		"tags": "",
+		"body": "Good to know we're on the same page. Well I was happy we could amically break up. I'll see you around in school then.",
+		"position": {
+			"x": 355,
+			"y": 1826
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass51",
+		"tags": "",
+		"body": "You are blocked",
+		"position": {
+			"x": 583,
+			"y": 1772
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass61",
+		"tags": "",
+		"body": "You have been blocked",
+		"position": {
+			"x": 898,
+			"y": 1289
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass5",
+		"tags": "",
+		"body": "You are blocked\r\n",
+		"position": {
+			"x": 1100,
+			"y": 519
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass4",
+		"tags": "",
+		"body": "What happened at work today?\r\n\r\n[[An arcade game shut down on it's own and the manager blamed me |pass17]]\r\n\r\n[[Why do you care all you care about is your MCAT score |pass18]]",
+		"position": {
+			"x": 937,
+			"y": 569
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass17",
+		"tags": "",
+		"body": "Hey you must have done something. You are capable of it.\r\n\r\n[[Well you know what arghhh|pass28]]\r\n[[Well you know what arghhh|pass28]]",
+		"position": {
+			"x": 805,
+			"y": 841
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass18",
+		"tags": "",
+		"body": "I care about you too but you seem to not care about me. Last week when we hung out and I talked about my problems you didn't seem to care about how I've been stresssed out med school applications these days.\r\n\r\n[[Well that's because you spend all your free time drinking with your pre-med friends |pass19]]\r\n[[I'm sorry I didn't realize I was paying as much attention to you as i should have been |pass20]]",
+		"position": {
+			"x": 1054,
+			"y": 823
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass19",
+		"tags": "",
+		"body": "Well you know what that's because their actually fun to be around with.\r\n\r\n[[Well if you think I'm so unfun |pass28]]\r\n[[Well if you think I'm so unfun |pass28]]",
+		"position": {
+			"x": 933,
+			"y": 1054
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass20",
+		"tags": "",
+		"body": "Thank you for understanding. What are you upto this Friday?\r\n\r\n[[I'm going out with friends |pass22]]\r\n[[I'm going to a visit my grandma |pass23]]",
+		"position": {
+			"x": 1132,
+			"y": 1072
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass23",
+		"tags": "",
+		"body": "Aww that's sweet maybe Saturday we could hang out maybe\r\n\r\n[[sure |pass29]]\r\n[[sure |pass29]]",
+		"position": {
+			"x": 1077,
+			"y": 1522
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass22",
+		"tags": "",
+		"body": "You're going out with friends again. Isn't that what you do all the time at your arcade job anyways hang out with friends.\r\n\r\n[[Of course I go to my job to hang out |pass24]]\r\n[[Well just because I don't spend my days looking at cells doesn't make my life any easier than yours|pass25]]",
+		"position": {
+			"x": 824,
+			"y": 1531
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass29",
+		"tags": "",
+		"body": "Ok I'll pick you up at your grandma's Saturday morning.\r\n\r\n[[Ok I'll see you then |pass40]]\r\n[[Ok I'll see you then |pass40]]",
+		"position": {
+			"x": 956,
+			"y": 1788
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass40",
+		"tags": "",
+		"body": "ttyl",
+		"position": {
+			"x": 858,
+			"y": 2019
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass24",
+		"tags": "",
+		"body": "Exactly while I have to cram for a midterm every 4 days all you do is spend time at the arcade doing nothing.\r\n\r\n[[You do realize I wasn't being serious right I don't hang out with friends during my work I have actual work |pass26]]\r\n[[You do realize I wasn't being serious right I don't hang out with friends during my work I have actual work |pass26]]",
+		"position": {
+			"x": 399,
+			"y": 2026
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass25",
+		"tags": "",
+		"body": "I think we should break this off we both obviously can't see eye to eye on this relationship.\r\n\r\n[[I agree I'm kinda tired of this |pass27]]\r\n[[I agree I'm kinda tired of this |pass27]]",
+		"position": {
+			"x": 622,
+			"y": 2028
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass27",
+		"tags": "",
+		"body": "Well I'm glad we at least didn't shed blood over this. See ya around.\r\n\r\n[[Well that was a bit simple but yea I'll see you around  |pass50]]\r\n[[Well that was a bit simple but yea I'll see you around  |pass50]]",
+		"position": {
+			"x": 583,
+			"y": 2272
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass26",
+		"tags": "",
+		"body": "Your work is a lot easier than mine whether you admit it or not.\r\n\r\n[[I'm done honestly you don't seem to care about my problems and you are always comparing your problems and how bigger they are than mine |pass37]]\r\n[[I'm done honestly you don't seem to care about my problems and you are always comparing your problems and how bigger they are than mine |pass37]]",
+		"position": {
+			"x": 287,
+			"y": 2273
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass37",
+		"tags": "",
+		"body": "Well maybe this is a good time to end this because none of us are happy\r\n\r\n[[fine |pass21]]\r\n[[fine |pass21]]",
+		"position": {
+			"x": 44,
+			"y": 2524
+		},
+		"colorID": 0
+	},
+	{
+		"title": "pass50",
+		"tags": "",
+		"body": "The End",
+		"position": {
+			"x": 422,
+			"y": 2519
+		},
+		"colorID": 0
+		
+	},
+		{
+		"title": "pass30",
+		"tags": "",
+		"body": "K talk to you later",
+		"position": {
+			"x": 400,
+			"y": 2300
+		},
+		"colorID": 0
+		
+	}
+]
